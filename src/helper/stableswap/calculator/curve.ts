@@ -43,33 +43,6 @@ export const computeD = (
   return d;
 };
 
-/**
- * Compute Y amount in respect to X on the StableSwap curve
- * @param ampFactor Amplification coefficient (A)
- * @param x The quantity of underlying asset
- * @param d StableSwap invariant
- * Reference: https://github.com/curvefi/curve-contract/blob/7116b4a261580813ef057887c5009e22473ddb7d/tests/simulation.py#L55
- */
-export const computeY = (ampFactor: BigNumber, x: BigNumber, d: BigNumber, nCoins: BigNumber = new BigNumber(2)): BigNumber => {
-  const Ann = ampFactor.multipliedBy(nCoins); // A*n^n
-  // sum' = prod' = x
-  const b = x.plus(d.idiv(Ann)).minus(d); // b = sum' - (A*n**n - 1) * D / (A * n**n)
-  const c = d.pow(3).idiv(nCoins.pow(2).multipliedBy(x).multipliedBy(Ann)); // c =  D ** (n + 1) / (n ** (2 * n) * prod' * A)
-
-  let yPrev = new BigNumber(0);
-  let y = d;
-  for (
-    let i = 0;
-    i < MAX_ITERS && y.minus(yPrev).abs().gt(1);
-    i++
-  ) {
-    yPrev = y;
-    y = y.pow(2).plus(c).idiv(nCoins.multipliedBy(y).plus(b));
-  }
-
-  return y;
-};
-
 export const computeY2 = (ampFactor: BigNumber, reserves: TokenAmount[], fromAmount: TokenAmount, tokenOut: string) => {
     const nCoins = new BigNumber(reserves.length);
 
