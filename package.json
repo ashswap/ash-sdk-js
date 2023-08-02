@@ -1,6 +1,6 @@
 {
   "name": "@ashswap/ash-sdk-js",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "AshSwap SDK for JavaScript and TypeScript",
   "main": "out/index.js",
   "types": "out/index.d.js",
@@ -10,7 +10,7 @@
   "scripts": {
     "test": "jest",
     "compile": "tsc -p tsconfig.json",
-    "prepare" : "npm run compile"
+    "prepare": "npm run compile"
   },
   "author": "AshSwap",
   "license": "MIT",
