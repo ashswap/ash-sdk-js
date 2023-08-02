@@ -12,7 +12,7 @@ class PoolV2Contract extends Contract<typeof poolV2Abi> {
         tokenInIndex: number,
         tokenOutIndex: number,
         tokenAmtIn: BigNumber
-    ): Promise<{fee: BigNumber, outputAmount: BigNumber}> {
+    ): Promise<{ fee: BigNumber, outputAmount: BigNumber }> {
         let interaction = this.contract.methods.estimateAmountOut([
             tokenInIndex,
             tokenOutIndex,
@@ -64,7 +64,7 @@ class PoolV2Contract extends Contract<typeof poolV2Abi> {
     /**
      * other enpoints
      */
-    
+
     async removeLiquidityOneCoin(sender: string, tokenPayment: TokenPayment, name: string, minAmount: BigNumber, receiver?: Address) {
         let interaction = this.contract.methods.removeLiquidityOneCoin([name, minAmount, receiver || new Address(sender)]);
         interaction.withSingleESDTTransfer(tokenPayment).withGasLimit(12_000_000);
@@ -76,7 +76,7 @@ class PoolV2Contract extends Contract<typeof poolV2Abi> {
         interaction.withGasLimit(35_000_000);
         return this.interceptInteraction(interaction).check().buildTransaction();
     }
-    
+
     async setLpTokenIdentifier(tokenId: string) {
         let interaction = this.contract.methods.setLpTokenIdentifier([tokenId]);
         interaction.withGasLimit(35_000_000);
@@ -176,7 +176,7 @@ class PoolV2Contract extends Contract<typeof poolV2Abi> {
     async getXp() {
         let interaction = this.contract.methods.getXcpProfit([]);
         const { firstValue } = await this.runQuery(interaction);
-        return (firstValue?.valueOf() as BigNumber[]) || [];
+        return (firstValue?.valueOf() as BigNumber) || new BigNumber(0);
     }
 
     async getReserves() {
