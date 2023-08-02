@@ -1,11 +1,11 @@
 import { Address, TokenPayment, Transaction } from "@multiversx/sdk-core/out";
 import { ContractManager } from "../src/helper/contracts";
-import { MAINNET_FARMS } from "../src/const/farms";
+import { getFarms } from "../src/const/farms";
 import BigNumber from "bignumber.js";
 import { IMetaESDT } from "../src/interface/tokens";
 
 describe("testing farm constract", () => {
-    const farm = MAINNET_FARMS[0]
+    const farm = getFarms()[0]
     const farmContract = ContractManager.getFarmContract(
         farm.farm_address
     );  

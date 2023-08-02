@@ -1,117 +1,19 @@
 import {
     Address,
-    BigUIntValue,
-    ContractFunction,
-    Query,
-    TokenIdentifierValue,
-    TokenPayment,
+    TokenPayment
 } from "@multiversx/sdk-core/out";
-import poolAbi from "../../abi/pool.abi.json";
 import BigNumber from "bignumber.js";
-import IPool, { RemoveLiquidityResultType } from "../../interface/pool";
-import { queryContractParser } from "../serializer";
-import Contract from "./contract";
-import { IESDTInfo } from "../token/token";
+import poolAbi from "../../abi/pool.abi.json";
+import { RemoveLiquidityResultType } from "../../interface/pool";
 import { CryptoPool, CryptoPoolContext } from "../cryptoPool/swap";
-import { TokenAmount } from "../token/tokenAmount";
 import { Fraction } from "../fraction/fraction";
-import { Price } from "../token/price";
-import { calculateSwapPrice } from "../stableswap/calculator/price";
 import { calculateEstimatedSwapOutputAmount } from "../stableswap/calculator/amounts";
-import { ProxyNetworkProvider } from "@multiversx/sdk-network-providers/out";
-import { getDefaultProxyNetworkProvider } from "../proxy/util";
+import { calculateSwapPrice } from "../stableswap/calculator/price";
+import { Price } from "../token/price";
+import { IESDTInfo } from "../token/token";
+import { TokenAmount } from "../token/tokenAmount";
+import Contract from "./contract";
 
-type TokenAttributes = {
-    reserve: BigNumber;
-    rate: BigNumber;
-};
-type ExchangeAttributes = {
-    token: string;
-    attribute: TokenAttributes;
-    final_amount: BigNumber;
-};
-type ExchangeResultType = {
-    total_fee: BigNumber;
-    admin_fee: BigNumber;
-    token_in: ExchangeAttributes;
-    token_out: ExchangeAttributes;
-};
-type AddLiquidityAttributes = {
-    token: string;
-    attribute: TokenAttributes;
-    amount_added: BigNumber;
-    total_fee: BigNumber;
-    admin_fee: BigNumber;
-};
-type AddLiquidityResultType = {
-    mint_amount: BigNumber;
-    tokens: AddLiquidityAttributes[];
-};
-
-const getAmountOutMaiarPool = async (
-    poolAddress: string,
-    tokenFromId: string,
-    amountIn: BigNumber,
-    proxy: ProxyNetworkProvider = getDefaultProxyNetworkProvider(),
-): Promise<BigNumber> => {
-    try {
-        const { returnData } = await proxy.queryContract(
-            new Query({
-                address: new Address(poolAddress),
-                func: new ContractFunction("getAmountOut"),
-                args: [
-                    new TokenIdentifierValue(tokenFromId),
-                    new BigUIntValue(amountIn),
-                ],
-            })
-        );
-        return (
-            queryContractParser(returnData[0], "BigUint")?.[0]?.valueOf() ||
-            new BigNumber(0)
-        );
-    } catch (error) { }
-    return new BigNumber(0);
-};
-
-const estimateAmountOut = async (
-    pool: IPool,
-    tokenFromId: string,
-    tokenToId: string,
-    amountIn: BigNumber
-) => {
-    if (pool.isMaiarPool) {
-        return await getAmountOutMaiarPool(pool.address, tokenFromId, amountIn);
-    }
-    return await new PoolContract(pool.address)
-    .getAmountOut(tokenFromId, tokenToId, amountIn)
-    .then((val) => val.token_out.final_amount);
-};
-
-const getReserveMaiarPool = async (
-    pool: IPool,
-    proxy: ProxyNetworkProvider = getDefaultProxyNetworkProvider(),
-) => {
-    const res = await proxy.queryContract(
-        new Query({
-            address: new Address(pool.address),
-            func: new ContractFunction("getReservesAndTotalSupply"),
-        })
-    );
-    const [token1, token2, supply] = res.returnData.map(
-        (data) => queryContractParser(data, "BigUint")[0].valueOf() as BigNumber
-    );
-    return {
-        token1,
-        token2,
-        supply,
-    };
-};
-
-export const queryPoolContract = {
-    getAmountOutMaiarPool,
-    estimateAmountOut,
-    getReserveMaiarPool,
-};
 class PoolContract extends Contract<typeof poolAbi> {
     private poolType?: "PlainPool" | "LendingPool" | "MetaPool";
     constructor(address: string) {

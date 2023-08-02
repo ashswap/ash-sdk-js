@@ -1,10 +1,10 @@
 import { Address, Transaction } from "@multiversx/sdk-core/out";
-import { ASHSWAP_CONFIG } from "../src/const/ashswapConfig";
 import { ContractManager } from "../src/helper/contracts";
+import { getDappContract } from "../src/const/ashswapConfig";
 
 describe("testing farm bride constract", () => {
     const contract = ContractManager.getFarmBribeContract(
-        ASHSWAP_CONFIG.dappContractMainnet.farmBribe
+        getDappContract().farmBribe
     );
 
     test("#claimReward", async () => {

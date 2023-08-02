@@ -55,6 +55,13 @@ const DEVNET_TOKENS_ALPHA: IESDTInfo[] = [
         decimals: 18,
     },
     {
+        identifier: "SEGLD-b8ba9a",
+        chainId: ChainId.Devnet,
+        symbol: "sEGLD",
+        name: "Liquid Staked EGLD",
+        decimals: 18,
+    },
+    {
         identifier: "AEGLD-126d13",
         chainId: ChainId.Devnet,
         symbol: "aEGLD",
@@ -118,7 +125,21 @@ const DEVNET_TOKENS_BETA: IESDTInfo[] = [
         symbol: "UTK",
         name: "Utrust",
         decimals: 18,
-    }
+    },
+    {
+        identifier: "SEGLD-90b353",
+        chainId: ChainId.Devnet,
+        symbol: "sEGLD",
+        name: "Liquid Staked EGLD",
+        decimals: 18,
+    },
+    {
+        identifier: "HSEGLD-8f2360",
+        chainId: ChainId.Devnet,
+        symbol: "HsEGLD",
+        name: "Hatom sEGLD",
+        decimals: 8,
+    },
 ];
 
 const MAINNET_TOKENS: IESDTInfo[] = [
@@ -166,7 +187,7 @@ const MAINNET_TOKENS: IESDTInfo[] = [
     },
 ];
 
-function getTokens() {
+export function getTokens() {
     var tokens: IESDTInfo[] = [];
     switch (ashNetwork) {
         case AshNetwork.DevnetAlpha:
@@ -181,10 +202,17 @@ function getTokens() {
     }
     return tokens;
 }
-export const TOKENS = getTokens();
-export const TOKENS_MAP = Object.fromEntries(
-    TOKENS.map((t) => [t.identifier, t])
-);
+
+export function getTokensMap() {
+    return Object.fromEntries(
+        getTokens().map((token) => [token.identifier, token])
+    );
+}
+
+export function getToken(identifier: string) {
+    return getTokensMap()[identifier];
+}
+
 export const MAINNET_TOKENS_MAP = Object.fromEntries(
     MAINNET_TOKENS.map((t) => [t.identifier, t])
 );

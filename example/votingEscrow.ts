@@ -1,12 +1,12 @@
 import { Address, TokenPayment } from "@multiversx/sdk-core/out";
-import { ASHSWAP_CONFIG } from "../src/const/ashswapConfig";
-import { MAINNET_TOKENS_MAP } from "../src/const/tokens";
+import { getDappContract } from "../src/const/ashswapConfig";
+import { getToken } from "../src/const/tokens";
 import { ContractManager } from "../src/helper/contracts";
 import BigNumber from "bignumber.js";
 
 async function withdraw() {
     const veContract = ContractManager.getVotingEscrowContract(
-        ASHSWAP_CONFIG.dappContractMainnet.voteEscrowedContract
+        getDappContract().voteEscrowedContract
     );
     const tx = await veContract.withdraw();
     return tx;
@@ -14,9 +14,9 @@ async function withdraw() {
 
 async function createLock() {
     const veContract = ContractManager.getVotingEscrowContract(
-        ASHSWAP_CONFIG.dappContractMainnet.voteEscrowedContract
+        getDappContract().voteEscrowedContract
     );
-    const ashToken = MAINNET_TOKENS_MAP["ASH-a642d1"]
+    const ashToken = getToken["ASH-a642d1"]
     const tokenPayment = TokenPayment.fungibleFromBigInteger(
         ashToken.identifier,
         new BigNumber(1),
@@ -31,7 +31,7 @@ async function createLock() {
 
 async function getUserLocked() {
     const veContract = ContractManager.getVotingEscrowContract(
-        ASHSWAP_CONFIG.dappContractMainnet.voteEscrowedContract
+        getDappContract().voteEscrowedContract
     );
     const locked = await veContract.getUserLocked(Address.Zero().bech32());
     return locked;

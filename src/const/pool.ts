@@ -12,9 +12,9 @@ const devnet: PoolConfig = {
     alpha: [
         {
             address:
-                "erd1qqqqqqqqqqqqqpgq9ppe9hk2pqrtwqc2k5zll8v8hmgmfcwsrmcqhxxwxm",
+                "erd1qqqqqqqqqqqqqpgq3k6l3skxzf0derlh5nknv5qr6fuuz82nrmcqwmm23p",
             lpToken: {
-                identifier: "ALP-4f7776",
+                identifier: "ALP-6539d6",
                 chainId: ChainId.Devnet,
                 symbol: "LPT-3pool",
                 name: "Ashswap LP",
@@ -29,9 +29,9 @@ const devnet: PoolConfig = {
         },
         {
             address:
-                "erd1qqqqqqqqqqqqqpgqwn0yqfmp4yztzmxl8pm8tv59cdls7dfwrmcq6v6rr9",
+                "erd1qqqqqqqqqqqqqpgqq369pu8z594n4nghpyg3jgkwxc2ccgpwrmcqx6s2xt",
             lpToken: {
-                identifier: "ALP-37d247",
+                identifier: "ALP-e58883",
                 chainId: ChainId.Devnet,
                 symbol: "LPT-BUSD-wEGLD",
                 name: "Ashswap LP",
@@ -42,9 +42,9 @@ const devnet: PoolConfig = {
         },
         {
             address:
-                "erd1qqqqqqqqqqqqqpgqthmzhtmuyym9fh44nmwwswyn7qnc5v73rmcqh6xrhy",
+                "erd1qqqqqqqqqqqqqpgq0wn05f529heqv5r8dkl6u8n3s2hsxa6rrmcqdlutmw",
             lpToken: {
-                identifier: "ALP-524be5",
+                identifier: "ALP-21e933",
                 chainId: ChainId.Devnet,
                 symbol: "LPT-ASH-USDT",
                 name: "Ashswap LP",
@@ -53,15 +53,28 @@ const devnet: PoolConfig = {
             tokens: [DEVNET_ALPHA_TOKENS_MAP["USDT-3e3720"], DEVNET_ALPHA_TOKENS_MAP["ASH-84eab0"]],
             type: EPoolType.PoolV2,
         },
+        {
+            address:
+                "erd1qqqqqqqqqqqqqpgqy5kf74ltag6235ksu4h653y53w33ysumrmcq07hjd3",
+            lpToken: {
+                identifier: "ALP-33fc69",
+                chainId: ChainId.Devnet,
+                symbol: "LPT-wEGLD-sEGLD",
+                name: "Ashswap LP",
+                decimals: 18,
+            },
+            tokens: [DEVNET_ALPHA_TOKENS_MAP["WEGLD-578a26"], DEVNET_ALPHA_TOKENS_MAP["SEGLD-b8ba9a"]],
+            type: EPoolType.LendingPool,
+        },
     ],
     beta: [
         {
             address:
-                "erd1qqqqqqqqqqqqqpgqe5wx34pzxn33vmqa3cmfkwspp5rxe2q52geskyn8gz",
+                "erd1qqqqqqqqqqqqqpgq3sfgh89vurcdet6lwl4cysqddeyk0rqh2gesqpkk4e",
             lpToken: {
-                identifier: "ALP-c874cd",
+                identifier: "ALP-9b7a73",
                 chainId: ChainId.Devnet,
-                symbol: "LPT-3pool",
+                symbol: "ALP-3pool",
                 name: "Ashswap LP",
                 decimals: 18,
             },
@@ -74,11 +87,11 @@ const devnet: PoolConfig = {
         },
         {
             address:
-                "erd1qqqqqqqqqqqqqpgqvpvsw60awv39kq8kcqug4t8aqhqr4y2p2gesjqnwt4",
+                "erd1qqqqqqqqqqqqqpgq65a4d6rv2czrk3uvfcxan7543geyvdp82ges44d43y",
             lpToken: {
-                identifier: "ALP-36485d",
+                identifier: "ALP-6b7c94",
                 chainId: ChainId.Devnet,
-                symbol: "LPT-BUSD-wEGLD",
+                symbol: "ALP-BUSD-wEGLD",
                 name: "Ashswap LP",
                 decimals: 18,
             },
@@ -87,11 +100,11 @@ const devnet: PoolConfig = {
         },
         {
             address:
-                "erd1qqqqqqqqqqqqqpgqy7tg9y8c4p5kaf205f87m0zhleexjnzp2gesrdg5yr",
+                "erd1qqqqqqqqqqqqqpgq9flqlgtsek6k5ppcqh0hphzv9vv2dxn62geskve0ly",
             lpToken: {
-                identifier: "ALP-48f785",
+                identifier: "ALP-0e6b1c",
                 chainId: ChainId.Devnet,
-                symbol: "LPT-ASH-USDT",
+                symbol: "ALP-ASH-USDT",
                 name: "Ashswap LP",
                 decimals: 18,
             },
@@ -100,11 +113,11 @@ const devnet: PoolConfig = {
         },
         {
             address:
-                "erd1qqqqqqqqqqqqqpgqga369hdj5ajac3ud2tvycxcsf2g65k852gesqaq96s",
+                "erd1qqqqqqqqqqqqqpgqtrla4ke85vs57e3jlua9dkm0ycgn6n2c2gesa02uuc",
             lpToken: {
-                identifier: "ALP-44bcf0",
+                identifier: "ALP-3c3066",
                 chainId: ChainId.Devnet,
-                symbol: "LPT-BUSD-UTK",
+                symbol: "ALP-BUSD-UTK",
                 name: "Ashswap LP",
                 decimals: 18,
             },
@@ -113,16 +126,48 @@ const devnet: PoolConfig = {
         },
         {
             address:
-                "erd1qqqqqqqqqqqqqpgqu4hvktdlhkz2trs05mhrp672pjmy98yn2gesjkmjna",
+                "erd1qqqqqqqqqqqqqpgqwqrrwk3npn4d26q5f0ltsang08q0fj8w2gesa4karx",
             lpToken: {
-                identifier: "ALP-a3a2f6",
+                identifier: "ALP-b9e453",
                 chainId: ChainId.Devnet,
-                symbol: "LPT-USDT-HTM",
+                symbol: "ALP-USDT-HTM",
                 name: "Ashswap LP",
                 decimals: 18,
             },
             tokens: [DEVNET_BETA_TOKENS_MAP["USDT-188935"], DEVNET_BETA_TOKENS_MAP["HTM-fe1f69"]],
             type: EPoolType.PoolV2,
+        },
+        {
+            address:
+                "erd1qqqqqqqqqqqqqpgq6t46575knqqfamnchlfgxvd56x2ymhvf2ges6xpr4s",
+            lpToken: {
+                identifier: "ALP-bf3d53",
+                chainId: ChainId.Devnet,
+                symbol: "ALP-sEGLD",
+                name: "Ashswap LP",
+                decimals: 18,
+            },
+            tokens: [
+                DEVNET_BETA_TOKENS_MAP["WEGLD-d7c6bb"],
+                DEVNET_BETA_TOKENS_MAP["SEGLD-90b353"],
+            ],
+            type: EPoolType.LendingPool,
+        },
+        {
+            address:
+                "erd1qqqqqqqqqqqqqpgqn4uu4yauhv8pjjvhvgxmhyqk82ftzytq2gesrmrprk",
+            lpToken: {
+                identifier: "ALP-9836b4",
+                chainId: ChainId.Devnet,
+                symbol: "ALP-sEGLD",
+                name: "Ashswap LP",
+                decimals: 18,
+            },
+            tokens: [
+                DEVNET_BETA_TOKENS_MAP["WEGLD-d7c6bb"],
+                DEVNET_BETA_TOKENS_MAP["HSEGLD-8f2360"],
+            ],
+            type: EPoolType.LendingPool,
         },
     ],
 };
@@ -173,7 +218,7 @@ const mainnet: IPool[] = [
     },
 ];
 
-function getPools() {
+export function getPools(): IPool[] {
     var pools: IPool[] = [];
     switch (ashNetwork) {
         case AshNetwork.DevnetAlpha:
@@ -189,8 +234,12 @@ function getPools() {
     return pools;
 }
 
-export const pools = getPools();
-export const POOLS_MAP_ADDRESS = Object.fromEntries(
-    pools.map((p) => [p.address, p])
-);
+export function getPoolsMap() {
+    return Object.fromEntries(
+        getPools().map((p) => [p.address, p])
+    );
+}
 
+export function getPool(address: string) {
+    return getPoolsMap()[address];
+}

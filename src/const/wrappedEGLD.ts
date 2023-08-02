@@ -1,4 +1,6 @@
 import BigNumber from "bignumber.js";
+import { ashNetwork } from "../helper";
+import { AshNetwork } from "./env";
 
 const tokens = {
     devnet: {
@@ -18,5 +20,13 @@ const tokens = {
         ]
     }
 }
-export const WRAPPED_EGLD = tokens.mainnet;
-export const MINIMUM_EGLD_AMT = new BigNumber(0.05).multipliedBy(10**18);
+
+export function getWrappedEgld() {
+    switch (ashNetwork) {
+        case AshNetwork.Mainnet:
+            return tokens.mainnet;
+        default:
+            return tokens.devnet;
+    }
+}
+export const MINIMUM_EGLD_AMT = new BigNumber(0.05).multipliedBy(10 ** 18);

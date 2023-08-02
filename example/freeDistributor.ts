@@ -1,10 +1,10 @@
 import { Address } from "@multiversx/sdk-core/out";
-import { ASHSWAP_CONFIG } from "../src/const/ashswapConfig";
 import { ContractManager } from "../src/helper/contracts";
+import { getDappContract } from "../src/const/ashswapConfig";
 
 async function feeDistributor() {
     const fdContract = ContractManager.getFeeDistributorContract(
-        ASHSWAP_CONFIG.dappContractMainnet.feeDistributor
+        getDappContract().feeDistributor
     );
     const tx = await fdContract.claim(Address.Zero());
     return tx;

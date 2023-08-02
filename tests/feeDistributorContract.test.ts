@@ -1,10 +1,10 @@
 import { Address, Transaction } from "@multiversx/sdk-core/out";
-import { ASHSWAP_CONFIG } from "../src/const/ashswapConfig";
 import { ContractManager } from "../src/helper/contracts";
+import { getDappContract } from "../src/const/ashswapConfig";
 
 describe("testing fee distributor contract", () => {
     const fdContract = ContractManager.getFeeDistributorContract(
-        ASHSWAP_CONFIG.dappContractMainnet.feeDistributor
+        getDappContract().feeDistributor
     );
 
     test("claim test case", async () => {

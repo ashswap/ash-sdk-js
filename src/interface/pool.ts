@@ -8,7 +8,6 @@ export default interface IPool {
     address: string;
     tokens: IESDTInfo[];
     lpToken: IESDTInfo;
-    isMaiarPool?: boolean;
     type: EPoolType;
 }
 

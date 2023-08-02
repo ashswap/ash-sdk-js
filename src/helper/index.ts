@@ -5,3 +5,5 @@ export * from './proxy/util';
 export * from './fraction/fraction';
 export * from './fraction/percent';
 export * from './serializer';
+export * from './farmBooster';
+export * from './balance';

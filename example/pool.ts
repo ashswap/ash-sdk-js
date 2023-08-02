@@ -2,15 +2,15 @@ import { TokenPayment } from "@multiversx/sdk-core/out";
 import { ProxyNetworkProvider } from "@multiversx/sdk-network-providers/out";
 import { ContractManager } from '../src/helper/contracts';
 import { MVXProxyNetworkAddress } from "../src/helper/proxy/util";
-import { ChainId, IESDTInfo } from "../src/helper/token/token";
-import { TOKENS_MAP } from "../src/const/tokens";
-import PoolContract, { queryPoolContract } from "../src/helper/contracts/pool";
+import { ChainId } from "../src/helper/token/token";
+import PoolContract from "../src/helper/contracts/pool";
 import BigNumber from "bignumber.js";
-import { POOLS_MAP_ADDRESS } from "../src/const/pool";
+import { getPool } from "../src/const/pool";
 import { AshNetwork } from "../src/const/env";
 import { TokenAmount } from "../src/helper/token/tokenAmount";
 import { Percent } from "../src/helper/fraction/percent";
 import { EPoolType } from "../src/interface/pool";
+import { getToken } from "../src/const/tokens";
 
 
 const poolAddress = "erd1qqqqqqqqqqqqqpgqs8p2v9wr8j48vqrmudcj94wu47kqra3r4fvshfyd9c"
@@ -20,8 +20,8 @@ estimateAmountOut()
 async function swap() {
 
     const proxy = new ProxyNetworkProvider(MVXProxyNetworkAddress.Mainnet)
-    const tokenIn = TOKENS_MAP["EGLD"]
-    const tokenOut = TOKENS_MAP["ASH-a642d1"];
+    const tokenIn = getToken("EGLD")
+    const tokenOut = getToken("ASH-a642d1");
     const tokenPayment = TokenPayment.fungibleFromBigInteger(
         tokenIn.identifier,
         new BigNumber(10),
@@ -42,20 +42,8 @@ async function swap() {
 
 }
 
-async function getAmountOut() {
-    const tokenIn = TOKENS_MAP["EGLD"]
-    const tokenOut = TOKENS_MAP["ASH-a642d1"];
-    const pool = POOLS_MAP_ADDRESS[poolAddress];
-    return await queryPoolContract.estimateAmountOut(
-        pool,
-        tokenIn.identifier,
-        tokenOut.identifier,
-        new BigNumber(1)
-    );
-}
-
 async function estimateAmountOut() {
-    const pool = POOLS_MAP_ADDRESS[poolAddress];
+    const pool = getPool(poolAddress);
     if (pool.type == EPoolType.PoolV2) {
         const poolContract = ContractManager.getPoolV2Contract(
             poolAddress

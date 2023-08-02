@@ -1,11 +1,11 @@
 import { ContractManager } from "../src/helper/contracts";
-import { WRAPPED_EGLD } from "../src/const/wrappedEGLD";
 import BigNumber from "bignumber.js";
+import { getWrappedEgld } from "../src/const/wrappedEGLD";
 import { Transaction } from "@multiversx/sdk-core/out";
 
 describe("testing wrapped EGLD contract", () => {
     const contract = ContractManager.getWrappedEGLDContract(
-        WRAPPED_EGLD.wegldContracts[0]
+        getWrappedEgld().wegldContracts[0]
     );
 
     test("#wrapEgld", async () => {

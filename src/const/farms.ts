@@ -10,34 +10,34 @@ const devnet: FarmConfig = {
     alpha: [
         {
             farm_address:
-                "erd1qqqqqqqqqqqqqpgqrhhrt46nymylla0upk9lkglvcus43x9urmcqelgnh2",
+                "erd1qqqqqqqqqqqqqpgq60m0c8eaxtgkvxezr4tsdzrgw3vvys3grmcqesp7la",
             reward_token_id: "ASH-84eab0",
             reward_token_decimal: 18,
-            farming_token_id: "ALP-4f7776",
+            farming_token_id: "ALP-6539d6",
             farming_token_decimal: 18,
-            farm_token_id: "FARM-f14098",
+            farm_token_id: "FARM-623c40",
             farm_token_decimal: 18,
             active: true,
         },
         {
             farm_address:
-                "erd1qqqqqqqqqqqqqpgq73dnmsmw2cspwa6806vkhcuyp96u9f3grmcq40feja",
+                "erd1qqqqqqqqqqqqqpgqw8ajz48fvmyzxh5x9mlzpaj0hr5m3p4zrmcqeeh6rk",
             reward_token_id: "ASH-84eab0",
             reward_token_decimal: 18,
-            farming_token_id: "ALP-37d247",
+            farming_token_id: "ALP-e58883",
             farming_token_decimal: 18,
-            farm_token_id: "FARM-83346e",
+            farm_token_id: "FARM-3a14f6",
             farm_token_decimal: 18,
             active: true,
         },
         {
             farm_address:
-                "erd1qqqqqqqqqqqqqpgqag4ya9mjz9kny647s09zrp3nrzgzdzfhrmcq50mtmu",
+                "erd1qqqqqqqqqqqqqpgqsxgpyrydafw2gw7wl75zteqqw4k27whmrmcqylayqc",
             reward_token_id: "ASH-84eab0",
             reward_token_decimal: 18,
-            farming_token_id: "ALP-524be5",
+            farming_token_id: "ALP-21e933",
             farming_token_decimal: 18,
-            farm_token_id: "FARM-9d6f51",
+            farm_token_id: "FARM-2e84a0",
             farm_token_decimal: 18,
             active: true,
         },
@@ -45,56 +45,78 @@ const devnet: FarmConfig = {
     beta: [
         {
             farm_address:
-                "erd1qqqqqqqqqqqqqpgq84grnrns73p28kkp9mu5v2dl5vclpq6r2gesn5hz4s",
+                "erd1qqqqqqqqqqqqqpgqpr6tklrup3ld2z59jurcq94z8668uuey2ges9thxd2",
             reward_token_id: "ASH-4ce444",
             reward_token_decimal: 18,
-            farming_token_id: "ALP-c874cd",
+            farming_token_id: "ALP-9b7a73",
             farming_token_decimal: 18,
-            farm_token_id: "FARM-c4c5ef",
+            farm_token_id: "FARM-0fc134",
             farm_token_decimal: 18,
             active: true,
         },
         {
             farm_address:
-                "erd1qqqqqqqqqqqqqpgq6cc8e07q28z3r9aemnn68x9pu8funw462gesh3p8qv",
+                "erd1qqqqqqqqqqqqqpgq2kt2w5v9k9swtm0hluqujg0xd9m99v9j2gesh7xjlz",
             reward_token_id: "ASH-4ce444",
             reward_token_decimal: 18,
-            farming_token_id: "ALP-36485d",
+            farming_token_id: "ALP-6b7c94",
             farming_token_decimal: 18,
-            farm_token_id: "FARM-6fb37f",
+            farm_token_id: "FARM-249abc",
             farm_token_decimal: 18,
             active: true,
         },
         {
             farm_address:
-                "erd1qqqqqqqqqqqqqpgq8ar2tjxdk04t6rdhdxm74rpy04d3l5lm2gesep69np",
+                "erd1qqqqqqqqqqqqqpgqx0jqq5s6f7g4pq8eh0lwu6wup58nj2262gesuuqkne",
             reward_token_id: "ASH-4ce444",
             reward_token_decimal: 18,
-            farming_token_id: "ALP-48f785",
+            farming_token_id: "ALP-0e6b1c",
             farming_token_decimal: 18,
-            farm_token_id: "FARM-19b7b1",
+            farm_token_id: "FARM-dd9f39",
             farm_token_decimal: 18,
             active: true,
         },
         {
             farm_address:
-                "erd1qqqqqqqqqqqqqpgqkhdl37ctu8wvht2am6lrgd2s7lvkvq0x2gesju2nvt",
+                "erd1qqqqqqqqqqqqqpgq4vdzeaxmsrs2fpdnn3lvqh2akrx7av062geswx67ec",
             reward_token_id: "ASH-4ce444",
             reward_token_decimal: 18,
-            farming_token_id: "ALP-44bcf0",
+            farming_token_id: "ALP-3c3066",
             farming_token_decimal: 18,
-            farm_token_id: "FARM-88e863",
+            farm_token_id: "FARM-f94a81",
             farm_token_decimal: 18,
             active: true,
         },
         {
             farm_address:
-                "erd1qqqqqqqqqqqqqpgqytrjkljp9k3fvqmze6qfpeyjx24dqkuj2gese9pp84",
+                "erd1qqqqqqqqqqqqqpgqn65rsy79a9pml86jptyhaucz7w32j7jw2gesglrlz2",
             reward_token_id: "ASH-4ce444",
             reward_token_decimal: 18,
-            farming_token_id: "ALP-a3a2f6",
+            farming_token_id: "ALP-b9e453",
             farming_token_decimal: 18,
-            farm_token_id: "FARM-6d2b86",
+            farm_token_id: "FARM-9c3c87",
+            farm_token_decimal: 18,
+            active: true,
+        },
+        {
+            farm_address:
+                "erd1qqqqqqqqqqqqqpgq4kv7uwgl074rxl2ykrnpk5ausdcp43rh2ges95w0tv",
+            reward_token_id: "ASH-4ce444",
+            reward_token_decimal: 18,
+            farming_token_id: "ALP-bf3d53",
+            farming_token_decimal: 18,
+            farm_token_id: "FARM-103481",
+            farm_token_decimal: 18,
+            active: true,
+        },
+        {
+            farm_address:
+                "erd1qqqqqqqqqqqqqpgqnzpfy3htluj97knawphq7qy2jav2thpd2gesee7v8q",
+            reward_token_id: "ASH-4ce444",
+            reward_token_decimal: 18,
+            farming_token_id: "ALP-9836b4",
+            farming_token_decimal: 18,
+            farm_token_id: "FARM-f9c739",
             farm_token_decimal: 18,
             active: true,
         },
@@ -137,7 +159,7 @@ const mainnet: IFarm[] = [
     },
 ];
 
-function getFarm() {
+export function getFarms(): IFarm[] {
     var farm: IFarm[] = [];
     switch (ashNetwork) {
         case AshNetwork.DevnetAlpha:
@@ -153,12 +175,14 @@ function getFarm() {
     return farm;
 }
 
+export function getFarmsMap() {
+    return Object.fromEntries(
+        getFarms().map((p) => [p.farm_address, p])
+    );
+}
 
-export const FARMS = getFarm();
-export const FARMS_MAP = Object.fromEntries(
-    FARMS.map((f) => [f.farm_address, f])
-);
-export const MAINNET_FARMS = mainnet;
-export const DEVNET_ALPHA_FARMS = devnet.alpha;
-export const DEVNET_BETA_FARMS = devnet.beta;
+export function getFarm(address: string) {
+    return getFarmsMap()[address];
+}
+
 export const FARM_DIV_SAFETY_CONST = 1_000_000_000_000;
