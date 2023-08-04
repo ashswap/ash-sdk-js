@@ -1,11 +1,14 @@
-import { Address, SmartContract, Transaction } from "@multiversx/sdk-core/out";
-import { ASHSWAP_CONFIG } from "../src/const/ashswapConfig";
+import { Transaction } from "@multiversx/sdk-core/out";
 import { ContractManager } from "../src/helper/contracts";
 import BigNumber from "bignumber.js";
+import { getDappContract } from "../src/const/ashswapConfig";
+import { AshNetwork } from "../src/const/env";
 
 describe("testing dao constract", () => {
+    ContractManager.setAshNetwork(AshNetwork.DevnetAlpha)
+
     const contract = ContractManager.getDAOContract(
-        ASHSWAP_CONFIG.dappContractDevnetAlpha.dao
+        getDappContract().dao
     );
 
     test("#execute", async () => {

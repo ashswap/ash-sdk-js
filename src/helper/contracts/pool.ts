@@ -14,6 +14,34 @@ import { IESDTInfo } from "../token/token";
 import { TokenAmount } from "../token/tokenAmount";
 import Contract from "./contract";
 
+type TokenAttributes = {
+    reserve: BigNumber;
+    rate: BigNumber;
+};
+type ExchangeAttributes = {
+    token: string;
+    attribute: TokenAttributes;
+    final_amount: BigNumber;
+};
+type ExchangeResultType = {
+    total_fee: BigNumber;
+    admin_fee: BigNumber;
+    token_in: ExchangeAttributes;
+    token_out: ExchangeAttributes;
+};
+type AddLiquidityAttributes = {
+    token: string;
+    attribute: TokenAttributes;
+    amount_added: BigNumber;
+    total_fee: BigNumber;
+    admin_fee: BigNumber;
+};
+type AddLiquidityResultType = {
+    mint_amount: BigNumber;
+    tokens: AddLiquidityAttributes[];
+};
+
+
 class PoolContract extends Contract<typeof poolAbi> {
     private poolType?: "PlainPool" | "LendingPool" | "MetaPool";
     constructor(address: string) {
@@ -60,12 +88,12 @@ class PoolContract extends Contract<typeof poolAbi> {
             receiver,
         ]);
         interaction
-        .withMultiESDTNFTTransfer(tokenPayments, new Address(sender))
-        .withGasLimit(
-            type === "PlainPool"
-                ? 10_000_000 + tokenPayments.length * 2_000_000
-                : 20_000_000
-        ); // 20m gas limit for lendingPool with 2 tokens
+            .withMultiESDTNFTTransfer(tokenPayments, new Address(sender))
+            .withGasLimit(
+                type === "PlainPool"
+                    ? 10_000_000 + tokenPayments.length * 2_000_000
+                    : 20_000_000
+            ); // 20m gas limit for lendingPool with 2 tokens
         interaction = this.interceptInteraction(interaction);
         return interaction.check().buildTransaction();
     }

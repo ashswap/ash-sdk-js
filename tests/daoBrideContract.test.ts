@@ -1,10 +1,13 @@
 import { Address, Transaction } from "@multiversx/sdk-core/out";
-import { ASHSWAP_CONFIG } from "../src/const/ashswapConfig";
 import { ContractManager } from "../src/helper/contracts";
+import { getDappContract } from "../src/const/ashswapConfig";
+import { AshNetwork } from "../src/const/env";
 
 describe("testing dao bride constract", () => {
+    ContractManager.setAshNetwork(AshNetwork.DevnetAlpha)
+
     const contract = ContractManager.getDAOBribeContract(
-        ASHSWAP_CONFIG.dappContractDevnetAlpha.daoBribe
+        getDappContract().daoBribe
     );
 
     test("#claimReward", async () => {
@@ -24,5 +27,5 @@ describe("testing dao bride constract", () => {
 
         expect(tx).toBeInstanceOf(Transaction);
     });
-   
+
 });
