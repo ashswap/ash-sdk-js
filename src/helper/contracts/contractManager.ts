@@ -1,4 +1,5 @@
 import { AshNetwork } from "../../const/env";
+import AggregatorContract from "./aggregator";
 import DAOBribeContract from "./daoBribeContract";
 import DAOContract from "./daoContract";
 import FarmBribeContract from "./farmBribeContract";
@@ -24,6 +25,7 @@ const daoContracts: Record<string, DAOContract> = {};
 const routerContracts: Record<string, RouterContract> = {};
 const farmRouterContracts: Record<string, FarmRouterContract> = {};
 const daoBribeContracts: Record<string, DAOBribeContract> = {};
+const aggregatorContracts: Record<string, AggregatorContract> = {};
 const getPoolContract = (address: string, ) => {
     return (
         poolContracts[address] ??
@@ -99,6 +101,12 @@ const getDAOBribeContract = (address: string) => {
         (daoBribeContracts[address] = new DAOBribeContract(address))
     );
 };
+const getAggregatorContract = (address: string) => {
+    return (
+        aggregatorContracts[address] ??
+        (aggregatorContracts[address] = new AggregatorContract(address))
+    );
+};
 
 
 export let ashNetwork = AshNetwork.Mainnet
@@ -119,5 +127,6 @@ export const ContractManager = {
     getRouterContract,
     getFarmRouterContract,
     getDAOBribeContract,
+    getAggregatorContract,
     setAshNetwork
 };

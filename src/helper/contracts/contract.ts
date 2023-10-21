@@ -1,31 +1,36 @@
 import {
-    AbiRegistry, Address, ArgSerializer,
-    EndpointParameterDefinition, Interaction, ResultsParser, SmartContract, SmartContractAbi
-} from "@multiversx/sdk-core/out";
-import { ProxyNetworkProvider } from "@multiversx/sdk-network-providers/out";
-import { gasLimitBuffer, gasPrice, maxGasLimit } from "../../const/dappConfig";
-import { getDefaultProxyNetworkProvider } from "../proxy/util";
-import { ChainId } from "../token/token";
+    AbiRegistry,
+    Address,
+    ArgSerializer,
+    EndpointParameterDefinition,
+    Interaction,
+    ResultsParser,
+    SmartContract,
+} from '@multiversx/sdk-core/out';
+import { ProxyNetworkProvider } from '@multiversx/sdk-network-providers/out';
+import { gasLimitBuffer, gasPrice, maxGasLimit } from '../../const/dappConfig';
+import { getDefaultProxyNetworkProvider } from '../proxy/util';
+import { ChainId } from '../token/token';
 
 type AbiType = {
     types: Record<string, any>;
-}
+};
 export default class Contract<T extends AbiType = any> {
     protected chainId = ChainId.Mainnet;
     protected proxy: ProxyNetworkProvider = getDefaultProxyNetworkProvider();
+    protected sender: Address = Address.Zero();
 
     protected resultParser = new ResultsParser();
     address: Address;
     contract: SmartContract;
     abiRegistry: AbiRegistry;
 
-
     constructor(address: string, abi: T) {
         this.address = new Address(address);
         this.abiRegistry = AbiRegistry.create(abi as any);
         this.contract = new SmartContract({
             address: this.address,
-            abi: new SmartContractAbi(this.abiRegistry),
+            abi: this.abiRegistry,
         });
     }
     protected getProxy() {
@@ -33,34 +38,33 @@ export default class Contract<T extends AbiType = any> {
     }
 
     protected interceptInteraction(interaction: Interaction) {
-        return interaction
+        interaction
             .withChainID(this.chainId)
             .withGasPrice(gasPrice)
             .withGasLimit(
                 Math.min(
-                    Math.floor(
-                        interaction.getGasLimit().valueOf() * gasLimitBuffer
-                    ),
+                    Math.floor(interaction.getGasLimit().valueOf() * gasLimitBuffer),
                     maxGasLimit
                 )
             );
+        if (this.sender && this.sender !== Address.Zero()) {
+            interaction.withSender(this.sender);
+        }
+        return interaction;
     }
 
     protected async runQuery(interaction: Interaction) {
         const res = await this.getProxy().queryContract(
             interaction.check().buildQuery()
         );
-        return this.resultParser.parseQueryResponse(
-            res,
-            interaction.getEndpoint()
-        );
+        return this.resultParser.parseQueryResponse(res, interaction.getEndpoint());
     }
 
     protected getAbiType(typeName: string) {
         const type = this.abiRegistry.customTypes.find(
             (t) => t.getName() === typeName
         );
-        if (!type) throw new Error("invalid custom type");
+        if (!type) throw new Error('invalid custom type');
         return type;
     }
 
@@ -74,13 +78,18 @@ export default class Contract<T extends AbiType = any> {
         return this;
     }
 
-    parseCustomType<U = any>(data: string, typeName: keyof T["types"]): U {
+    onSender(sender: Address) {
+        this.sender = sender;
+        return this;
+    }
+
+    parseCustomType<U = any>(data: string, typeName: keyof T['types']): U {
         const arg = new ArgSerializer();
         const type = this.getAbiType(typeName as string);
         return arg
             .buffersToValues(
-                [Buffer.from(data, "base64")],
-                [new EndpointParameterDefinition("foo", "bar", type)]
+                [Buffer.from(data, 'base64')],
+                [new EndpointParameterDefinition('foo', 'bar', type)]
             )[0]
             ?.valueOf();
     }

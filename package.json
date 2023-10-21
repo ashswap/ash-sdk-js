@@ -15,8 +15,8 @@
   "author": "AshSwap",
   "license": "MIT",
   "dependencies": {
-    "@multiversx/sdk-core": "11.4.1",
-    "@multiversx/sdk-network-providers": "1.2.1",
+    "@multiversx/sdk-core": "12.6.0",
+    "@multiversx/sdk-network-providers": "1.5.0",
     "lodash.chunk": "^4.2.0",
     "moment": "^2.29.1",
     "typescript": "^4.9.5"
