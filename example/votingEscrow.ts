@@ -1,4 +1,4 @@
-import { Address, TokenPayment } from "@multiversx/sdk-core/out";
+import { Address, TokenTransfer } from "@multiversx/sdk-core/out";
 import { getDappContract } from "../src/const/ashswapConfig";
 import { getToken } from "../src/const/tokens";
 import { ContractManager } from "../src/helper/contracts";
@@ -17,7 +17,7 @@ async function createLock() {
         getDappContract().voteEscrowedContract
     );
     const ashToken = getToken["ASH-a642d1"]
-    const tokenPayment = TokenPayment.fungibleFromBigInteger(
+    const tokenPayment = TokenTransfer.fungibleFromBigInteger(
         ashToken.identifier,
         new BigNumber(1),
         ashToken.decimals

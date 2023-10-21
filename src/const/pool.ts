@@ -1,4 +1,3 @@
-import { ashNetwork } from "../helper/contracts";
 import { ChainId } from "../helper/token/token";
 import IPool, { EPoolType } from "../interface/pool";
 import { AshNetwork } from "./env";
@@ -218,7 +217,7 @@ const mainnet: IPool[] = [
     },
 ];
 
-export function getPools(): IPool[] {
+export function getPools(ashNetwork = AshNetwork.Mainnet): IPool[] {
     var pools: IPool[] = [];
     switch (ashNetwork) {
         case AshNetwork.DevnetAlpha:

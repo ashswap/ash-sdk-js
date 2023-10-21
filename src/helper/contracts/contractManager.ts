@@ -1,4 +1,5 @@
-import { AshNetwork } from "../../const/env";
+import { MVXProxyNetworkAddress } from "../../const";
+import { ChainId } from "../token";
 import AggregatorContract from "./aggregator";
 import DAOBribeContract from "./daoBribeContract";
 import DAOContract from "./daoContract";
@@ -13,120 +14,109 @@ import RouterContract from "./routerContract";
 import VotingEscrowContract from "./votingEscrowContract";
 import WrappedEGLDContract from "./wrappedEGLD";
 
-const poolContracts: Record<string, PoolContract> = {};
-const poolV2Contracts: Record<string, PoolV2Contract> = {};
-const farmContracts: Record<string, FarmContract> = {};
-const veContracts: Record<string, VotingEscrowContract> = {};
-const feeDistributorContracts: Record<string, FeeDistributorContract> = {};
-const farmControllerContracts: Record<string, FarmControllerContract> = {};
-const farmBribeContracts: Record<string, FarmBribeContract> = {};
-const wrappedEGLDContracts: Record<string, WrappedEGLDContract> = {};
-const daoContracts: Record<string, DAOContract> = {};
-const routerContracts: Record<string, RouterContract> = {};
-const farmRouterContracts: Record<string, FarmRouterContract> = {};
-const daoBribeContracts: Record<string, DAOBribeContract> = {};
-const aggregatorContracts: Record<string, AggregatorContract> = {};
-const getPoolContract = (address: string, ) => {
-    return (
-        poolContracts[address] ??
-        (poolContracts[address] = new PoolContract(address))
-    );
-};
+export class AshContractsManager {
+    chainId: ChainId;
+    apiAddress: string;
+    constructor(chainId?: ChainId, apiAddress?: string) {
+        this.chainId = chainId || ChainId.Mainnet;
+        this.apiAddress = apiAddress || MVXProxyNetworkAddress[this.chainId];
+    }
 
-const getPoolV2Contract = (address: string) => {
-    return (
-        poolV2Contracts[address] ??
-        (poolV2Contracts[address] = new PoolV2Contract(address))
-    );
-};
+    private poolContracts: Record<string, PoolContract> = {};
+    private poolV2Contracts: Record<string, PoolV2Contract> = {};
+    private farmContracts: Record<string, FarmContract> = {};
+    private veContracts: Record<string, VotingEscrowContract> = {};
+    private feeDistributorContracts: Record<string, FeeDistributorContract> = {};
+    private farmControllerContracts: Record<string, FarmControllerContract> = {};
+    private farmBribeContracts: Record<string, FarmBribeContract> = {};
+    private wrappedEGLDContracts: Record<string, WrappedEGLDContract> = {};
+    private daoContracts: Record<string, DAOContract> = {};
+    private routerContracts: Record<string, RouterContract> = {};
+    private farmRouterContracts: Record<string, FarmRouterContract> = {};
+    private daoBribeContracts: Record<string, DAOBribeContract> = {};
+    private aggregatorContracts: Record<string, AggregatorContract> = {};
 
-const getFarmContract = (address: string) => {
-    return (
-        farmContracts[address] ??
-        (farmContracts[address] = new FarmContract(address))
-    );
-};
-
-const getVotingEscrowContract = (address: string) => {
-    return (
-        veContracts[address] ??
-        (veContracts[address] = new VotingEscrowContract(address))
-    );
-};
-const getFeeDistributorContract = (address: string) => {
-    return (
-        feeDistributorContracts[address] ??
-        (feeDistributorContracts[address] = new FeeDistributorContract(address))
-    );
-};
-const getFarmControllerContract = (address: string) => {
-    return (
-        farmControllerContracts[address] ??
-        (farmControllerContracts[address] = new FarmControllerContract(address))
-    );
-};
-const getFarmBribeContract = (address: string) => {
-    return (
-        farmBribeContracts[address] ??
-        (farmBribeContracts[address] = new FarmBribeContract(address))
-    );
-};
-const getWrappedEGLDContract = (address: string) => {
-    return (
-        wrappedEGLDContracts[address] ??
-        (wrappedEGLDContracts[address] = new WrappedEGLDContract(address))
-    );
-};
-const getDAOContract = (address: string) => {
-    return (
-        daoContracts[address] ??
-        (daoContracts[address] = new DAOContract(address))
-    );
-};
-const getRouterContract = (address: string) => {
-    return (
-        routerContracts[address] ??
-        (routerContracts[address] = new RouterContract(address))
-    );
-};
-const getFarmRouterContract = (address: string) => {
-    return (
-        farmRouterContracts[address] ??
-        (farmRouterContracts[address] = new FarmRouterContract(address))
-    );
-};
-const getDAOBribeContract = (address: string) => {
-    return (
-        daoBribeContracts[address] ??
-        (daoBribeContracts[address] = new DAOBribeContract(address))
-    );
-};
-const getAggregatorContract = (address: string) => {
-    return (
-        aggregatorContracts[address] ??
-        (aggregatorContracts[address] = new AggregatorContract(address))
-    );
-};
-
-
-export let ashNetwork = AshNetwork.Mainnet
-const setAshNetwork = (network: AshNetwork) => {
-    ashNetwork = network
+    getPoolContract(address: string) {
+        return (
+            this.poolContracts[address] ??
+            (this.poolContracts[address] = new PoolContract(address, this.chainId, this.apiAddress))
+        );
+    };
+    
+    getPoolV2Contract(address: string) {
+        return (
+            this.poolV2Contracts[address] ??
+            (this.poolV2Contracts[address] = new PoolV2Contract(address, this.chainId, this.apiAddress))
+        );
+    };
+    
+    getFarmContract = (address: string) => {
+        return (
+            this.farmContracts[address] ??
+            (this.farmContracts[address] = new FarmContract(address, this.chainId, this.apiAddress))
+        );
+    };
+    
+    getVotingEscrowContract = (address: string) => {
+        return (
+            this.veContracts[address] ??
+            (this.veContracts[address] = new VotingEscrowContract(address, this.chainId, this.apiAddress))
+        );
+    };
+    getFeeDistributorContract = (address: string) => {
+        return (
+            this.feeDistributorContracts[address] ??
+            (this.feeDistributorContracts[address] = new FeeDistributorContract(address, this.chainId, this.apiAddress))
+        );
+    };
+    getFarmControllerContract = (address: string) => {
+        return (
+            this.farmControllerContracts[address] ??
+            (this.farmControllerContracts[address] = new FarmControllerContract(address, this.chainId, this.apiAddress))
+        );
+    };
+    getFarmBribeContract = (address: string) => {
+        return (
+            this.farmBribeContracts[address] ??
+            (this.farmBribeContracts[address] = new FarmBribeContract(address, this.chainId, this.apiAddress))
+        );
+    };
+    getWrappedEGLDContract = (address: string) => {
+        return (
+            this.wrappedEGLDContracts[address] ??
+            (this.wrappedEGLDContracts[address] = new WrappedEGLDContract(address, this.chainId, this.apiAddress))
+        );
+    };
+    getDAOContract = (address: string) => {
+        return (
+            this.daoContracts[address] ??
+            (this.daoContracts[address] = new DAOContract(address, this.chainId, this.apiAddress))
+        );
+    };
+    getRouterContract = (address: string) => {
+        return (
+            this.routerContracts[address] ??
+            (this.routerContracts[address] = new RouterContract(address, this.chainId, this.apiAddress))
+        );
+    };
+    getFarmRouterContract = (address: string) => {
+        return (
+            this.farmRouterContracts[address] ??
+            (this.farmRouterContracts[address] = new FarmRouterContract(address, this.chainId, this.apiAddress))
+        );
+    };
+    getDAOBribeContract = (address: string) => {
+        return (
+            this.daoBribeContracts[address] ??
+            (this.daoBribeContracts[address] = new DAOBribeContract(address, this.chainId, this.apiAddress))
+        );
+    };
+    getAggregatorContract = (address: string) => {
+        return (
+            this.aggregatorContracts[address] ??
+            (this.aggregatorContracts[address] = new AggregatorContract(address, this.chainId, this.apiAddress))
+        );
+    };
 }
 
-export const ContractManager = {
-    getPoolContract,
-    getFarmContract,
-    getVotingEscrowContract,
-    getFeeDistributorContract,
-    getFarmControllerContract,
-    getFarmBribeContract,
-    getPoolV2Contract,
-    getWrappedEGLDContract,
-    getDAOContract,
-    getRouterContract,
-    getFarmRouterContract,
-    getDAOBribeContract,
-    getAggregatorContract,
-    setAshNetwork
-};
+export const ContractManager = new AshContractsManager();

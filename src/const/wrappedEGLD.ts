@@ -1,5 +1,4 @@
 import BigNumber from "bignumber.js";
-import { ashNetwork } from "../helper";
 import { AshNetwork } from "./env";
 
 const tokens = {
@@ -21,7 +20,7 @@ const tokens = {
     }
 }
 
-export function getWrappedEgld() {
+export function getWrappedEgld(ashNetwork = AshNetwork.Mainnet) {
     switch (ashNetwork) {
         case AshNetwork.Mainnet:
             return tokens.mainnet;

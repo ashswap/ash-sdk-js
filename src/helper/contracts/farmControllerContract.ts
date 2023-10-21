@@ -1,11 +1,12 @@
-import Contract from "./contract";
-import farmControllerAbi from "../../abi/farm_controller.abi.json";
 import { Address } from "@multiversx/sdk-core/out";
 import BigNumber from "bignumber.js";
+import farmControllerAbi from "../../abi/farm_controller.abi.json";
+import { ChainId } from "../token";
+import Contract from "./contract";
 
 class FarmControllerContract extends Contract<typeof farmControllerAbi> {
-    constructor(address: string) {
-        super(address, farmControllerAbi);
+    constructor(address: string, chainId?: ChainId, apiAddress?: string) {
+        super(address, farmControllerAbi, chainId, apiAddress);
     }
 
     async voteForFarmWeights(farmAddress: Address, weight: BigNumber) {
@@ -14,9 +15,7 @@ class FarmControllerContract extends Contract<typeof farmControllerAbi> {
             weight,
         ]);
         interaction.withGasLimit(500_000_000);
-        return this.interceptInteraction(interaction)
-            .check()
-            .buildTransaction();
+        return this.interceptInteraction(interaction);
     }
 
     /**
@@ -28,17 +27,13 @@ class FarmControllerContract extends Contract<typeof farmControllerAbi> {
             farmAddress,
         ]);
         interaction.withGasLimit(500_000_000);
-        return this.interceptInteraction(interaction)
-            .check()
-            .buildTransaction();
+        return this.interceptInteraction(interaction);
     }
 
     async applyTransferOwnership() {
         let interaction = this.contract.methods.commitTransferOwnership([]);
         interaction.withGasLimit(500_000_000);
-        return this.interceptInteraction(interaction)
-            .check()
-            .buildTransaction();
+        return this.interceptInteraction(interaction);
     }
 
     async addFarm(farmAddress: Address, farmType: number, weight: BigNumber) {
@@ -48,17 +43,13 @@ class FarmControllerContract extends Contract<typeof farmControllerAbi> {
             weight
         ]);
         interaction.withGasLimit(500_000_000);
-        return this.interceptInteraction(interaction)
-            .check()
-            .buildTransaction();
+        return this.interceptInteraction(interaction);
     }
 
     async checkpoint() {
         let interaction = this.contract.methods.checkpoint([]);
         interaction.withGasLimit(500_000_000);
-        return this.interceptInteraction(interaction)
-            .check()
-            .buildTransaction();
+        return this.interceptInteraction(interaction);
     }
 
     async checkpointFarm(farmAddress: Address) {
@@ -66,9 +57,7 @@ class FarmControllerContract extends Contract<typeof farmControllerAbi> {
             farmAddress,
         ]);
         interaction.withGasLimit(500_000_000);
-        return this.interceptInteraction(interaction)
-            .check()
-            .buildTransaction();
+        return this.interceptInteraction(interaction);
     }
 
     async getFarmRelativeWeight(farmAddress: Address, time: number) {
@@ -86,9 +75,7 @@ class FarmControllerContract extends Contract<typeof farmControllerAbi> {
             weight
         ]);
         interaction.withGasLimit(500_000_000);
-        return this.interceptInteraction(interaction)
-            .check()
-            .buildTransaction();
+        return this.interceptInteraction(interaction);
     }
 
     async changeTypeWeight(farmType: number, weight: BigNumber) {
@@ -97,9 +84,7 @@ class FarmControllerContract extends Contract<typeof farmControllerAbi> {
             weight
         ]);
         interaction.withGasLimit(500_000_000);
-        return this.interceptInteraction(interaction)
-            .check()
-            .buildTransaction();
+        return this.interceptInteraction(interaction);
     }
 
     async changeFarmWeight(farmAddress: Address, weight: BigNumber) {
@@ -108,9 +93,7 @@ class FarmControllerContract extends Contract<typeof farmControllerAbi> {
             weight
         ]);
         interaction.withGasLimit(500_000_000);
-        return this.interceptInteraction(interaction)
-            .check()
-            .buildTransaction();
+        return this.interceptInteraction(interaction);
     }
 
 }

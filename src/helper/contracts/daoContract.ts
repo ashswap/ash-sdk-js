@@ -1,8 +1,9 @@
 import {
     Address
 } from "@multiversx/sdk-core/out";
-import daoAbi from "../../abi/dao.abi.json";
 import BigNumber from "bignumber.js";
+import daoAbi from "../../abi/dao.abi.json";
+import { ChainId } from "../token";
 import Contract from "./contract";
 export type DAOAction = {
     dest_address: Address;
@@ -10,8 +11,8 @@ export type DAOAction = {
     arguments: Buffer[];
 };
 class DAOContract extends Contract<typeof daoAbi> {
-    constructor(address: string) {
-        super(address, daoAbi);
+    constructor(address: string, chainId?: ChainId, apiAddress?: string) {
+        super(address, daoAbi, chainId, apiAddress);
     }
 
     async getProposalVotes(proposalID: number, address: string): Promise<{
@@ -26,9 +27,7 @@ class DAOContract extends Contract<typeof daoAbi> {
     async propose(meta: string, action: DAOAction) {
         let interaction = this.contract.methods.propose([meta, action]);
         interaction.withGasLimit(12_000_000);
-        return this.interceptInteraction(interaction)
-            .check()
-            .buildTransaction();
+        return this.interceptInteraction(interaction);
     }
 
     /**
@@ -41,17 +40,13 @@ class DAOContract extends Contract<typeof daoAbi> {
     async vote(proposalID: number, yes: BigNumber, no: BigNumber) {
         let interaction = this.contract.methods.vote([proposalID, yes, no]);
         interaction.withGasLimit(12_000_000);
-        return this.interceptInteraction(interaction)
-            .check()
-            .buildTransaction();
+        return this.interceptInteraction(interaction);
     }
 
     async execute(proposalID: number) {
         let interaction = this.contract.methods.execute([proposalID]);
         interaction.withGasLimit(500_000_000);
-        return this.interceptInteraction(interaction)
-            .check()
-            .buildTransaction();
+        return this.interceptInteraction(interaction);
     }
 }
 

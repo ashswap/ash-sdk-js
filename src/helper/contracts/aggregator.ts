@@ -3,10 +3,11 @@ import agAbi from "../../abi/aggregator.abi.json";
 import { Address, TokenTransfer } from "@multiversx/sdk-core/out";
 import BigNumber from "bignumber.js";
 import { AggregatorStep } from "../aggregator";
+import { ChainId } from "../token";
 
 class AggregatorContract extends Contract<typeof agAbi> {
-    constructor(address: string) {
-        super(address, agAbi);
+    constructor(address: string, chainId?: ChainId, apiAddress?: string) {
+        super(address, agAbi, chainId, apiAddress);
     }
 
     /**
@@ -17,6 +18,7 @@ class AggregatorContract extends Contract<typeof agAbi> {
         if (!protocol || protocol === Address.Zero().bech32()) return 0;
         const query = this.contract.methods.getProtocolFeePercent([protocol]);
         const { firstValue } = await this.runQuery(query);
+        console.log('fee', firstValue?.valueOf())
         return firstValue?.valueOf() || 0;
     }
 

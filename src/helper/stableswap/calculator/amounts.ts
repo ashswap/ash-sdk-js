@@ -2,7 +2,7 @@ import BigNumber from "bignumber.js";
 import { Fraction } from "../../fraction/fraction";
 import { IESDTInfo } from "../../token/token";
 import { TokenAmount } from "../../token/tokenAmount";
-import { computeD, computeY, computeY2 } from "./curve";
+import { computeD, computeY2 } from "./curve";
 
 const PRECISION = new BigNumber(1e18);
 const getTokenRate = (token: IESDTInfo) => {

@@ -1,23 +1,23 @@
 import {
     Address,
-    TokenPayment
+    TokenTransfer
 } from "@multiversx/sdk-core/out";
 import BigNumber from "bignumber.js";
 import poolAbi from "../../abi/pool.abi.json";
-import { RemoveLiquidityResultType } from "../../interface/pool";
+import { AddLiquidityResultType, ExchangeResultType, RemoveLiquidityResultType } from "../../interface/pool";
 import { CryptoPool, CryptoPoolContext } from "../cryptoPool/swap";
 import { Fraction } from "../fraction/fraction";
 import { calculateEstimatedSwapOutputAmount } from "../stableswap/calculator/amounts";
 import { calculateSwapPrice } from "../stableswap/calculator/price";
 import { Price } from "../token/price";
-import { IESDTInfo } from "../token/token";
+import { ChainId, IESDTInfo } from "../token/token";
 import { TokenAmount } from "../token/tokenAmount";
 import Contract from "./contract";
 
 class PoolContract extends Contract<typeof poolAbi> {
     private poolType?: "PlainPool" | "LendingPool" | "MetaPool";
-    constructor(address: string) {
-        super(address, poolAbi);
+    constructor(address: string, chainId?: ChainId, apiAddress?: string) {
+        super(address, poolAbi, chainId, apiAddress);
     }
 
     async getPoolType() {
@@ -50,7 +50,7 @@ class PoolContract extends Contract<typeof poolAbi> {
 
     async addLiquidity(
         sender: string,
-        tokenPayments: TokenPayment[],
+        tokenPayments: TokenTransfer[],
         mintAmtMin: BigNumber,
         receiver = Address.Zero()
     ) {
@@ -60,31 +60,30 @@ class PoolContract extends Contract<typeof poolAbi> {
             receiver,
         ]);
         interaction
-        .withMultiESDTNFTTransfer(tokenPayments, new Address(sender))
+        .withMultiESDTNFTTransfer(tokenPayments)
+        .withSender(new Address(sender))
         .withGasLimit(
             type === "PlainPool"
                 ? 10_000_000 + tokenPayments.length * 2_000_000
                 : 20_000_000
         ); // 20m gas limit for lendingPool with 2 tokens
         interaction = this.interceptInteraction(interaction);
-        return interaction.check().buildTransaction();
+        return interaction;
     }
 
     async removeLiquidity(
-        tokenPayment: TokenPayment,
+        tokenPayment: TokenTransfer,
         tokensAmtMin: BigNumber[]
     ) {
         let interaction = this.contract.methods.removeLiquidity(tokensAmtMin);
         interaction
             .withSingleESDTTransfer(tokenPayment)
             .withGasLimit(9_000_000);
-        return this.interceptInteraction(interaction)
-            .check()
-            .buildTransaction();
+        return this.interceptInteraction(interaction);
     }
 
     async exchange(
-        tokenPayment: TokenPayment,
+        tokenPayment: TokenTransfer,
         tokenToId: string,
         minWeiOut: BigNumber
     ) {
@@ -96,9 +95,7 @@ class PoolContract extends Contract<typeof poolAbi> {
         interaction
             .withSingleESDTTransfer(tokenPayment)
             .withGasLimit(type === "PlainPool" ? 8_000_000 : 15_000_000); // 15m gas limit for lendingPool
-        return this.interceptInteraction(interaction)
-            .check()
-            .buildTransaction();
+        return this.interceptInteraction(interaction);
     }
 
     async estimateAddLiquidity(
@@ -128,30 +125,22 @@ class PoolContract extends Contract<typeof poolAbi> {
 
     async commitNewFee(swapFeePercent: number, adminFeePercent: number) {
         let interaction = this.contract.methods.commitNewFee([swapFeePercent, adminFeePercent]);
-        return this.interceptInteraction(interaction)
-            .check()
-            .buildTransaction();
+        return this.interceptInteraction(interaction);
     }
 
     async applyNewFee() {
         let interaction = this.contract.methods.applyNewFee();
-        return this.interceptInteraction(interaction)
-            .check()
-            .buildTransaction();
+        return this.interceptInteraction(interaction);
     }
 
     async revertNewFee() {
         let interaction = this.contract.methods.revertNewFee();
-        return this.interceptInteraction(interaction)
-            .check()
-            .buildTransaction();
+        return this.interceptInteraction(interaction);
     }
 
     async withdrawAdminFees() {
         let interaction = this.contract.methods.withdrawAdminFees();
-        return this.interceptInteraction(interaction)
-            .check()
-            .buildTransaction();
+        return this.interceptInteraction(interaction);
     }
 
     async getAmpFactor() {

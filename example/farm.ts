@@ -1,21 +1,19 @@
-import { Address, TokenPayment } from "@multiversx/sdk-core/out";
-import { ContractManager } from '../src/helper/contracts';
+import { Address, TokenTransfer } from "@multiversx/sdk-core/out";
 import { IMetaESDT } from "../src/interface/tokens";
 import BigNumber from "bignumber.js";
-import { AshNetwork } from "../src/const/env";
 import { FarmBoostInfo, FarmTokenAttrs } from "../src/interface/farm";
 import { getFarm } from "../src/const/farms";
-import { calcYieldBoost, calcYieldBoostFromFarmToken } from "../src/helper";
-import moment from "moment";
+import { AshContractsManager, ChainId, calcYieldBoost, calcYieldBoostFromFarmToken } from "../src/helper";
 import { getDappContract } from "../src/const/ashswapConfig";
 
+const contractManager = new AshContractsManager(ChainId.Mainnet);
 const farmAddress = "erd1qqqqqqqqqqqqqpgqe9hhqvvw9ssj6y388pf6gznwhuavhkzc4fvs0ra2fe"
-ContractManager.setAshNetwork(AshNetwork.Mainnet)
+
 stake()
 
 async function stake() {
     const farm = getFarm(farmAddress);
-    const farmContract = ContractManager.getFarmContract(
+    const farmContract = contractManager.getFarmContract(
         farm.farm_address
     );
     const stakeAmt = new BigNumber(1);
@@ -23,7 +21,7 @@ async function stake() {
     const farmTokenInWallet: IMetaESDT[] = [];
 
     const tokenPayments = farmTokenInWallet.map((t) =>
-        TokenPayment.metaEsdtFromBigInteger(
+        TokenTransfer.metaEsdtFromBigInteger(
             t.collection,
             t.nonce,
             t.balance,
@@ -31,7 +29,7 @@ async function stake() {
         )
     );
     tokenPayments.unshift(
-        TokenPayment.fungibleFromBigInteger(
+        TokenTransfer.fungibleFromBigInteger(
             farm.farming_token_id,
             stakeAmt,
             farm.farming_token_decimal
@@ -46,14 +44,14 @@ async function stake() {
 
 async function unstake() {
     const farm = getFarm(farmAddress);
-    const farmContract = ContractManager.getFarmContract(
+    const farmContract = contractManager.getFarmContract(
         farm.farm_address
     );
 
     const farmToken: IMetaESDT[] = [];
 
     const tokenPayments = farmToken.map((t) =>
-        TokenPayment.metaEsdtFromBigInteger(
+        TokenTransfer.metaEsdtFromBigInteger(
             t.collection,
             t.nonce,
             t.balance
@@ -68,14 +66,14 @@ async function unstake() {
 
 async function claim() {
     const farm = getFarm(farmAddress);
-    const farmContract = ContractManager.getFarmContract(
+    const farmContract = contractManager.getFarmContract(
         farm.farm_address
     );
 
     const farmToken: IMetaESDT[] = [];
 
     const tokenPayments = farmToken.map((t) =>
-        TokenPayment.metaEsdtFromBigInteger(
+        TokenTransfer.metaEsdtFromBigInteger(
             t.collection,
             t.nonce,
             t.balance,
@@ -91,7 +89,7 @@ async function claim() {
 
 async function calculateRewardsForGivenPosition() {
     const farm = getFarm(farmAddress);
-    const farmContract = ContractManager.getFarmContract(
+    const farmContract = contractManager.getFarmContract(
         farm.farm_address
     );
 
@@ -113,7 +111,7 @@ async function calculateRewardsForGivenPosition() {
 
 async function getSlopeBoosted() {
     const farm = getFarm(farmAddress);
-    const farmContract = ContractManager.getFarmContract(
+    const farmContract = contractManager.getFarmContract(
         farm.farm_address
     );
 
@@ -124,7 +122,7 @@ async function getSlopeBoosted() {
 
 async function queryFarm() {
     const farm = getFarm(farmAddress);
-    const farmContract = ContractManager.getFarmContract(
+    const farmContract = contractManager.getFarmContract(
         farm.farm_address
     );
 
@@ -139,7 +137,7 @@ async function queryFarm() {
 
 async function getBoost() {
     const farm = getFarm(farmAddress);
-    const farmContract = ContractManager.getFarmContract(
+    const farmContract = contractManager.getFarmContract(
         farm.farm_address
     );
     const farmTokenSupply = await farmContract.getFarmTokenSupply();
@@ -162,7 +160,7 @@ async function getBoost() {
         "FarmTokenAttributes"
     );
     const ownerAddress = farmTokenAttr.booster.bech32();
-    const locked = await ContractManager.getVotingEscrowContract(
+    const locked = await contractManager.getVotingEscrowContract(
         getDappContract().voteEscrowedContract
     ).getUserLocked(ownerAddress);
     const veSupply = new BigNumber(0);
@@ -171,7 +169,7 @@ async function getBoost() {
     const slope = token.balance
         .div(farmTokenAttr.initial_farm_amount)
         .multipliedBy(farmTokenAttr.slope_used);
-    const ve = slope.multipliedBy(unlockTs.minus(moment().unix()));
+    const ve = slope.multipliedBy(unlockTs.minus(Math.floor(Date.now() / 1000)));
     const perLP = farmTokenAttr.initial_farm_amount.div(
         farmTokenAttr.initial_farming_amount
     );

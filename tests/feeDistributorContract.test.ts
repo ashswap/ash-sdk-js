@@ -1,21 +1,23 @@
-import { Address, Transaction } from "@multiversx/sdk-core/out";
-import { ContractManager } from "../src/helper/contracts";
+import { Address, Interaction } from "@multiversx/sdk-core/out";
+import { AshNetwork } from "../src/const";
 import { getDappContract } from "../src/const/ashswapConfig";
+import { ChainId } from "../src/helper";
+import { AshContractsManager } from "../src/helper/contracts";
 
 describe("testing fee distributor contract", () => {
-    const fdContract = ContractManager.getFeeDistributorContract(
-        getDappContract().feeDistributor
+    const fdContract = new AshContractsManager(ChainId.Devnet).getFeeDistributorContract(
+        getDappContract(AshNetwork.DevnetBeta).feeDistributor
     );
 
     test("claim test case", async () => {
         const tx = await fdContract.claim(Address.Zero());
 
-        expect(tx).toBeInstanceOf(Transaction);
+        expect(tx).toBeInstanceOf(Interaction);
     });
 
     test("checkpointToken test case", async () => {
         const tx = await fdContract.checkpointToken();
 
-        expect(tx).toBeInstanceOf(Transaction);
+        expect(tx).toBeInstanceOf(Interaction);
     });
 });

@@ -1,16 +1,18 @@
-import { Transaction } from "@multiversx/sdk-core/out";
+import { Interaction } from "@multiversx/sdk-core/out";
+import { AshNetwork } from "../src/const";
 import { getDappContract } from "../src/const/ashswapConfig";
-import { ContractManager } from "../src/helper/contracts";
+import { ChainId } from "../src/helper";
+import { AshContractsManager } from "../src/helper/contracts";
 
 describe("testing vosting escrow constract", () => {
-    const veContract = ContractManager.getVotingEscrowContract(
-        getDappContract().voteEscrowedContract
+    const veContract = new AshContractsManager(ChainId.Devnet).getVotingEscrowContract(
+        getDappContract(AshNetwork.DevnetBeta).voteEscrowedContract
     );
 
     test("#withdraw", async () => {
         const tx = await veContract.withdraw();
 
-        expect(tx).toBeInstanceOf(Transaction);
+        expect(tx).toBeInstanceOf(Interaction);
     });
 
    

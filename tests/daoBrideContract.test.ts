@@ -1,28 +1,29 @@
-import { Address, Transaction } from "@multiversx/sdk-core/out";
-import { ASHSWAP_CONFIG } from "../src/const/ashswapConfig";
-import { ContractManager } from "../src/helper/contracts";
+import { Address, Interaction } from "@multiversx/sdk-core/out";
+import { AshNetwork, getDappContract } from "../src/const";
+import { ChainId } from "../src/helper";
+import { AshContractsManager } from "../src/helper/contracts";
 
 describe("testing dao bride constract", () => {
-    const contract = ContractManager.getDAOBribeContract(
-        ASHSWAP_CONFIG.dappContractDevnetAlpha.daoBribe
+    const contract = new AshContractsManager(ChainId.Devnet).getDAOBribeContract(
+        getDappContract(AshNetwork.DevnetBeta).daoBribe
     );
 
     test("#claimReward", async () => {
         const tx = await contract.claimReward(0, []);
 
-        expect(tx).toBeInstanceOf(Transaction);
+        expect(tx).toBeInstanceOf(Interaction);
     });
 
     test("#addRewardAmount", async () => {
         const tx = await contract.addRewardAmount(Address.Zero().bech32(), 0, []);
 
-        expect(tx).toBeInstanceOf(Transaction);
+        expect(tx).toBeInstanceOf(Interaction);
     });
 
     test("#withdrawReward", async () => {
         const tx = await contract.withdrawReward(0);
 
-        expect(tx).toBeInstanceOf(Transaction);
+        expect(tx).toBeInstanceOf(Interaction);
     });
    
 });

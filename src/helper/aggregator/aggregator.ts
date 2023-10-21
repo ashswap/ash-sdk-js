@@ -14,7 +14,7 @@ const DEFAULT_CONFIG: Record<
 > = {
   D: {
     API: 'https://aggregator-devnet.ashswap.io',
-    CONTRACT: 'erd1qqqqqqqqqqqqqpgq4g6k2qygj4qlyxkhjmtcn7j9r27humwth2usc90tnn',
+    CONTRACT: 'erd1qqqqqqqqqqqqqpgq3v7zza934936euxk3zg85et4jamqalzmh2usgdgrn2',
     WEGLD: 'WEGLD-d7c6bb',
   },
   '1': {
@@ -32,6 +32,7 @@ export class Aggregator {
   chainId: ChainId;
   private aggregatorContract: AggregatorContract;
   private address: Address;
+
   constructor(config?: AggregatorConfig) {
     this.chainId = config?.chainId || ChainId.Mainnet;
     this.api = config?.api || this.defaultConfig.API;
@@ -43,8 +44,9 @@ export class Aggregator {
 
     this.address = new Address(this.defaultConfig.CONTRACT);
     this.aggregatorContract = new AggregatorContract(
-      this.address.bech32()
-    ).onChain(this.chainId);
+      this.address.bech32(),
+      this.chainId
+    )
   }
 
   private get defaultConfig() {
@@ -112,6 +114,7 @@ export class Aggregator {
         ? await this.aggregatorContract.getProtocolFeePercent(this.protocol)
         : 0);
     this.fee = fee;
+    console.log(this.fee);
     const amt = new BigNumber(amount)
       .multipliedBy(MAX_FEE_PERCENT - fee)
       .idiv(MAX_FEE_PERCENT)

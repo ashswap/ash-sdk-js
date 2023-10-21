@@ -1,5 +1,4 @@
-import { ashNetwork } from "../helper/contracts";
-import { ChainId, ESDT, IESDTInfo } from "../helper/token/token";
+import { ChainId, IESDTInfo } from "../helper/token/token";
 import { AshNetwork } from "./env";
 
 export const VE_ASH_DECIMALS = 18;
@@ -187,7 +186,7 @@ const MAINNET_TOKENS: IESDTInfo[] = [
     },
 ];
 
-export function getTokens() {
+export function getTokens(ashNetwork = AshNetwork.Mainnet) {
     var tokens: IESDTInfo[] = [];
     switch (ashNetwork) {
         case AshNetwork.DevnetAlpha:

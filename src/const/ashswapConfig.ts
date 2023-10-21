@@ -1,4 +1,3 @@
-import { ashNetwork } from "../helper";
 import { AshNetwork } from "./env";
 
 type DappContracts = {
@@ -62,7 +61,7 @@ const dappContractMainnet: DappContracts = {
 };
 
 
-export function getDappContract() {
+export function getDappContract(ashNetwork = AshNetwork.Mainnet) {
     switch (ashNetwork) {
         case AshNetwork.DevnetAlpha:
             return dappContractDevnet.alpha;

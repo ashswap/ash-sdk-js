@@ -1,11 +1,12 @@
-import { Address, TokenPayment } from "@multiversx/sdk-core/out";
-import poolV2Abi from "../../abi/pool_v2.abi.json";
+import { Address, TokenTransfer } from "@multiversx/sdk-core/out";
 import BigNumber from "bignumber.js";
+import poolV2Abi from "../../abi/pool_v2.abi.json";
+import { ChainId } from "../token";
 import Contract from "./contract";
 
 class PoolV2Contract extends Contract<typeof poolV2Abi> {
-    constructor(address: string) {
-        super(address, poolV2Abi);
+    constructor(address: string, chainId?: ChainId, apiAddress?: string) {
+        super(address, poolV2Abi, chainId, apiAddress);
     }
 
     async estimateAmountOut(
@@ -43,44 +44,44 @@ class PoolV2Contract extends Contract<typeof poolV2Abi> {
         return firstValue?.valueOf();
     }
 
-    async addLiquidity(sender: string, tokenPayments: TokenPayment[], minMintAmount: BigNumber, receiver?: Address) {
+    async addLiquidity(sender: string, tokenPayments: TokenTransfer[], minMintAmount: BigNumber, receiver?: Address) {
         let interaction = this.contract.methods.addLiquidity([minMintAmount, receiver || new Address(sender)]);
-        interaction.withMultiESDTNFTTransfer(tokenPayments, new Address(sender)).withGasLimit(35_000_000);
-        return this.interceptInteraction(interaction).check().buildTransaction();
+        interaction.withMultiESDTNFTTransfer(tokenPayments).withSender(new Address(sender)).withGasLimit(35_000_000);
+        return this.interceptInteraction(interaction);
     }
 
-    async exchange(tokenPayment: TokenPayment, mintWeiOut: BigNumber) {
+    async exchange(tokenPayment: TokenTransfer, mintWeiOut: BigNumber) {
         let interaction = this.contract.methods.exchange([mintWeiOut]);
         interaction.withSingleESDTTransfer(tokenPayment).withGasLimit(35_000_000);
-        return this.interceptInteraction(interaction).check().buildTransaction();
+        return this.interceptInteraction(interaction);
     }
 
-    async removeLiquidity(sender: string, tokenPayment: TokenPayment, minAmounts: BigNumber[], receiver?: Address) {
+    async removeLiquidity(sender: string, tokenPayment: TokenTransfer, minAmounts: BigNumber[], receiver?: Address) {
         let interaction = this.contract.methods.removeLiquidity([minAmounts, receiver || new Address(sender)]);
         interaction.withSingleESDTTransfer(tokenPayment).withGasLimit(12_000_000);
-        return this.interceptInteraction(interaction).check().buildTransaction();
+        return this.interceptInteraction(interaction);
     }
 
     /**
      * other enpoints
      */
     
-    async removeLiquidityOneCoin(sender: string, tokenPayment: TokenPayment, name: string, minAmount: BigNumber, receiver?: Address) {
+    async removeLiquidityOneCoin(sender: string, tokenPayment: TokenTransfer, name: string, minAmount: BigNumber, receiver?: Address) {
         let interaction = this.contract.methods.removeLiquidityOneCoin([name, minAmount, receiver || new Address(sender)]);
         interaction.withSingleESDTTransfer(tokenPayment).withGasLimit(12_000_000);
-        return this.interceptInteraction(interaction).check().buildTransaction();
+        return this.interceptInteraction(interaction);
     }
 
     async claimAdminFees() {
         let interaction = this.contract.methods.claimAdminFees([]);
         interaction.withGasLimit(35_000_000);
-        return this.interceptInteraction(interaction).check().buildTransaction();
+        return this.interceptInteraction(interaction);
     }
     
     async setLpTokenIdentifier(tokenId: string) {
         let interaction = this.contract.methods.setLpTokenIdentifier([tokenId]);
         interaction.withGasLimit(35_000_000);
-        return this.interceptInteraction(interaction).check().buildTransaction();
+        return this.interceptInteraction(interaction);
     }
 
     async getLpPrice() {

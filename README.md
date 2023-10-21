@@ -8,8 +8,6 @@ The trading fee will stay in the liquidity pool to leverage LP holder interest. 
 
 ```typescript
     //Example of swap
-
-    const proxy = new ProxyNetworkProvider(MVXProxyNetworkAddress.Mainnet)
     const tokenIn = TOKENS_MAP["EGLD"]
     const tokenOut = TOKENS_MAP["ASH-a642d1"];
     const tokenPayment = TokenPayment.fungibleFromBigInteger(
@@ -20,7 +18,7 @@ The trading fee will stay in the liquidity pool to leverage LP holder interest. 
 
     const poolContract = ContractManager.getPoolContract(
         poolAddress
-    ).onChain(ChainId.Mainnet).onProxy(proxy);
+    );
 
     const tx = await poolContract.exchange(
         tokenPayment,
@@ -87,6 +85,24 @@ The contract contains the admin fee that is collected from Pools and distribute 
 ```typescript
     const contract = ContractManager.getFeeDistributorContract("erd1...");
     const tx = await contract.claim(new Address("erd1..."));
+```
+See more in [example](https://github.com/ashswap/ash-sdk-js/tree/main/example/freeDistributor.ts)
+
+## Ashswap Aggregator service
+Provide an abstraction service to get routes to swap between two assets, 
+
+```typescript
+    // Permit the user to convert one EGLD to ASH with a 0.1% slippage.
+    // Based on the fee configuration, xPortal will also receive a small amount of fees.
+    const xPortalProtocol = 'erd...';
+    const agService = new Aggregator({chainId: ChainId.Mainnet, protocol: xPortalProtocol});
+    const interaction = await agService.aggregate('EGLD', 'ASH-a642d1', 1e18, 100);
+    // remember to set the sender (caller) before sending the tx
+    const tx = interaction.withSender(new Address('erd...')).check().buildTransaction();
+    // sign and send tx to the network
+    sendTransactions({
+        transactions: [tx],
+    })
 ```
 See more in [example](https://github.com/ashswap/ash-sdk-js/tree/main/example/freeDistributor.ts)
 

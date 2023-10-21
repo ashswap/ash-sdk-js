@@ -1,12 +1,14 @@
-import { Address, TokenPayment, Transaction } from "@multiversx/sdk-core/out";
-import { ContractManager } from "../src/helper/contracts";
-import { getFarms } from "../src/const/farms";
+import { Address, TokenTransfer, Interaction } from "@multiversx/sdk-core/out";
 import BigNumber from "bignumber.js";
+import { AshNetwork } from "../src/const";
+import { getFarms } from "../src/const/farms";
+import { ChainId } from "../src/helper";
+import { AshContractsManager } from "../src/helper/contracts";
 import { IMetaESDT } from "../src/interface/tokens";
 
 describe("testing farm constract", () => {
-    const farm = getFarms()[0]
-    const farmContract = ContractManager.getFarmContract(
+    const farm = getFarms(AshNetwork.DevnetBeta)[0]
+    const farmContract = new AshContractsManager(ChainId.Devnet).getFarmContract(
         farm.farm_address
     );  
 
@@ -15,7 +17,7 @@ describe("testing farm constract", () => {
 
         const farmTokenInWallet: IMetaESDT[] = [];
         const tokenPayments = farmTokenInWallet.map((t) =>
-            TokenPayment.metaEsdtFromBigInteger(
+            TokenTransfer.metaEsdtFromBigInteger(
                 t.collection,
                 t.nonce,
                 t.balance,
@@ -23,7 +25,7 @@ describe("testing farm constract", () => {
             )
         );
         tokenPayments.unshift(
-            TokenPayment.fungibleFromBigInteger(
+            TokenTransfer.fungibleFromBigInteger(
                 farm.farming_token_id,
                 stakeAmt,
                 farm.farming_token_decimal
@@ -34,14 +36,14 @@ describe("testing farm constract", () => {
             tokenPayments,
         );
 
-        expect(tx).toBeInstanceOf(Transaction);
+        expect(tx).toBeInstanceOf(Interaction);
     });
 
     test("#exitFarm", async () => {
         const farmToken: IMetaESDT[] = [];
 
         const tokenPayments = farmToken.map((t) =>
-            TokenPayment.metaEsdtFromBigInteger(
+            TokenTransfer.metaEsdtFromBigInteger(
                 t.collection,
                 t.nonce,
                 t.balance
@@ -59,7 +61,7 @@ describe("testing farm constract", () => {
         const farmToken: IMetaESDT[] = [];
 
         const tokenPayments = farmToken.map((t) =>
-            TokenPayment.metaEsdtFromBigInteger(
+            TokenTransfer.metaEsdtFromBigInteger(
                 t.collection,
                 t.nonce,
                 t.balance,
@@ -77,7 +79,7 @@ describe("testing farm constract", () => {
     test("#checkpointFarmRewards", async () => {
         const tx = await farmContract.checkpointFarmRewards();
 
-        expect(tx).toBeInstanceOf(Transaction);
+        expect(tx).toBeInstanceOf(Interaction);
     });
 
     test("#queryFarm", async () => {

@@ -1,4 +1,3 @@
-import { ashNetwork } from "../helper/contracts";
 import { IFarm } from "../interface/farm";
 import { AshNetwork } from "./env";
 
@@ -159,7 +158,7 @@ const mainnet: IFarm[] = [
     },
 ];
 
-export function getFarms(): IFarm[] {
+export function getFarms(ashNetwork = AshNetwork.Mainnet): IFarm[] {
     var farm: IFarm[] = [];
     switch (ashNetwork) {
         case AshNetwork.DevnetAlpha:

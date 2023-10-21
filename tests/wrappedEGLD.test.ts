@@ -1,17 +1,19 @@
-import { ContractManager } from "../src/helper/contracts";
+import { Interaction } from "@multiversx/sdk-core/out";
 import BigNumber from "bignumber.js";
+import { AshNetwork } from "../src/const";
 import { getWrappedEgld } from "../src/const/wrappedEGLD";
-import { Transaction } from "@multiversx/sdk-core/out";
+import { ChainId } from "../src/helper";
+import { AshContractsManager } from "../src/helper/contracts";
 
 describe("testing wrapped EGLD contract", () => {
-    const contract = ContractManager.getWrappedEGLDContract(
-        getWrappedEgld().wegldContracts[0]
+    const contract = new AshContractsManager(ChainId.Devnet).getWrappedEGLDContract(
+        getWrappedEgld(AshNetwork.DevnetBeta).wegldContracts[0]
     );
 
     test("#wrapEgld", async () => {
         const tx = await contract.wrapEgld(new BigNumber(0));
 
-        expect(tx).toBeInstanceOf(Transaction);
+        expect(tx).toBeInstanceOf(Interaction);
     });
 
    

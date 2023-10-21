@@ -8,24 +8,24 @@ import {
     SmartContract,
 } from '@multiversx/sdk-core/out';
 import { ProxyNetworkProvider } from '@multiversx/sdk-network-providers/out';
-import { gasLimitBuffer, gasPrice, maxGasLimit } from '../../const/dappConfig';
-import { getDefaultProxyNetworkProvider } from '../proxy/util';
-import { ChainId } from '../token/token';
+import { MVXProxyNetworkAddress, gasLimitBuffer, gasPrice, maxGasLimit } from '../../const/dappConfig';
+import { ChainId } from '../token';
 
 type AbiType = {
     types: Record<string, any>;
 };
 export default class Contract<T extends AbiType = any> {
-    protected chainId = ChainId.Mainnet;
-    protected proxy: ProxyNetworkProvider = getDefaultProxyNetworkProvider();
-    protected sender: Address = Address.Zero();
+    protected chainId: ChainId;
+    protected proxy: ProxyNetworkProvider;;
 
     protected resultParser = new ResultsParser();
     address: Address;
     contract: SmartContract;
     abiRegistry: AbiRegistry;
 
-    constructor(address: string, abi: T) {
+    constructor(address: string, abi: T, chainId?: ChainId, apiAddress?: string) {
+        this.chainId = chainId || ChainId.Mainnet;
+        this.proxy = new ProxyNetworkProvider(apiAddress || MVXProxyNetworkAddress[this.chainId]);
         this.address = new Address(address);
         this.abiRegistry = AbiRegistry.create(abi as any);
         this.contract = new SmartContract({
@@ -47,9 +47,6 @@ export default class Contract<T extends AbiType = any> {
                     maxGasLimit
                 )
             );
-        if (this.sender && this.sender !== Address.Zero()) {
-            interaction.withSender(this.sender);
-        }
         return interaction;
     }
 
@@ -66,21 +63,6 @@ export default class Contract<T extends AbiType = any> {
         );
         if (!type) throw new Error('invalid custom type');
         return type;
-    }
-
-    onChain(chainId: ChainId) {
-        this.chainId = chainId;
-        return this;
-    }
-
-    onProxy(proxy: ProxyNetworkProvider) {
-        this.proxy = proxy;
-        return this;
-    }
-
-    onSender(sender: Address) {
-        this.sender = sender;
-        return this;
     }
 
     parseCustomType<U = any>(data: string, typeName: keyof T['types']): U {

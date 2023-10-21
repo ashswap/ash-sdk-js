@@ -1,12 +1,10 @@
-import { TokenPayment } from "@multiversx/sdk-core/out";
+import { TokenTransfer } from "@multiversx/sdk-core/out";
 import { ProxyNetworkProvider } from "@multiversx/sdk-network-providers/out";
 import { ContractManager } from '../src/helper/contracts';
-import { MVXProxyNetworkAddress } from "../src/helper/proxy/util";
 import { ChainId } from "../src/helper/token/token";
 import PoolContract from "../src/helper/contracts/pool";
 import BigNumber from "bignumber.js";
 import { getPool } from "../src/const/pool";
-import { AshNetwork } from "../src/const/env";
 import { TokenAmount } from "../src/helper/token/tokenAmount";
 import { Percent } from "../src/helper/fraction/percent";
 import { EPoolType } from "../src/interface/pool";
@@ -14,15 +12,14 @@ import { getToken } from "../src/const/tokens";
 
 
 const poolAddress = "erd1qqqqqqqqqqqqqpgqs8p2v9wr8j48vqrmudcj94wu47kqra3r4fvshfyd9c"
-ContractManager.setAshNetwork(AshNetwork.Mainnet)
+
 estimateAmountOut()
 
 async function swap() {
 
-    const proxy = new ProxyNetworkProvider(MVXProxyNetworkAddress.Mainnet)
     const tokenIn = getToken("EGLD")
     const tokenOut = getToken("ASH-a642d1");
-    const tokenPayment = TokenPayment.fungibleFromBigInteger(
+    const tokenPayment = TokenTransfer.fungibleFromBigInteger(
         tokenIn.identifier,
         new BigNumber(10),
         tokenIn.decimals
@@ -30,7 +27,7 @@ async function swap() {
 
     const poolContract = ContractManager.getPoolContract(
         poolAddress
-    ).onChain(ChainId.Mainnet).onProxy(proxy);
+    );
 
     const tx = await poolContract.exchange(
         tokenPayment,
