@@ -1,8 +1,4 @@
-import {
-  Address,
-  Interaction,
-  TokenTransfer
-} from '@multiversx/sdk-core/out';
+import { Address, Interaction, TokenTransfer } from '@multiversx/sdk-core/out';
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
 import AggregatorContract from '../contracts/aggregator';
@@ -46,7 +42,7 @@ export class Aggregator {
     this.aggregatorContract = new AggregatorContract(
       this.address.bech32(),
       this.chainId
-    )
+    );
   }
 
   private get defaultConfig() {
@@ -114,7 +110,6 @@ export class Aggregator {
         ? await this.aggregatorContract.getProtocolFeePercent(this.protocol)
         : 0);
     this.fee = fee;
-    console.log(this.fee);
     const amt = new BigNumber(amount)
       .multipliedBy(MAX_FEE_PERCENT - fee)
       .idiv(MAX_FEE_PERCENT)
@@ -126,7 +121,12 @@ export class Aggregator {
         amount: amt,
       },
     });
-    return data.data;
+    return {
+      ...data.data,
+      __from: from,
+      __to: to,
+      __amount: new BigNumber(amount).toString(10),
+    } as SorSwapResponse;
   }
 
   /**
@@ -143,15 +143,49 @@ export class Aggregator {
     amount: BigNumber.Value,
     slippage: number
   ): Promise<Interaction> {
-    const protocol =
-      this.getTokenId(from) === this.getTokenId(to) &&
-        this.getTokenId(from) === this.defaultConfig.WEGLD
-        ? ''
-        : this.protocol;
     const res = await this.getPaths(from, to, amount);
     if (!res) throw new Error(`Could not find any paths for ${from} to ${to}`);
-    const swaps = res?.swaps || [];
-    const hopTokenIds = res?.tokenAddresses || [];
+    return await this.aggregateFromPaths(res, slippage);
+  }
+
+  /**
+   *
+   * @param sorswap can get from getPaths methods
+   * @param slippage 1% = 1_000
+   * @returns interaction that is ready to sign and send to the network
+   */
+  async aggregateFromPaths(
+    sorswap: SorSwapResponse,
+    slippage: number
+  ): Promise<Interaction> {
+    const {
+      __from: from,
+      __to: to,
+      __amount: amount,
+    } = (sorswap as SorSwapResponse & {
+      __from: string;
+      __to: string;
+      __amount: string;
+    }) || {};
+
+    if (
+      !sorswap ||
+      !from ||
+      !to ||
+      !amount ||
+      this.getTokenId(from) !== sorswap.tokenIn ||
+      this.getTokenId(to) !== sorswap.tokenOut
+    )
+      throw new Error('Invalid swap response');
+
+    const protocol =
+      this.getTokenId(from) === this.getTokenId(to) &&
+      this.getTokenId(from) === this.defaultConfig.WEGLD
+        ? ''
+        : this.protocol;
+
+    const swaps = sorswap?.swaps || [];
+    const hopTokenIds = sorswap?.tokenAddresses || [];
     const steps: AggregatorStep[] = swaps.map((s) => {
       const step: AggregatorStep = {
         token_in: s.assetIn,
@@ -170,7 +204,7 @@ export class Aggregator {
     const outputLimits = [
       {
         token: this.getTokenId(to),
-        amount: new BigNumber(res.returnAmountWithDecimal)
+        amount: new BigNumber(sorswap.returnAmountWithDecimal)
           .multipliedBy(MAX_FEE_PERCENT - slippage)
           .idiv(MAX_FEE_PERCENT),
       },

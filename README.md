@@ -104,5 +104,5 @@ Provide an abstraction service to get routes to swap between two assets,
         transactions: [tx],
     })
 ```
-See more in [example](https://github.com/ashswap/ash-sdk-js/tree/main/example/freeDistributor.ts)
+See more in [example](https://github.com/ashswap/ash-sdk-js/tree/main/example/aggregator.ts)
 
