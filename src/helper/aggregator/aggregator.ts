@@ -15,7 +15,7 @@ const DEFAULT_CONFIG: Record<
   },
   '1': {
     API: 'https://aggregator.ashswap.io',
-    CONTRACT: 'erd1qqqqqqqqqqqqqpgqglgkaxm73j7mhw5u940fsmmncnayxj884fvs54lnr6',
+    CONTRACT: 'erd1qqqqqqqqqqqqqpgqw3amc0flmps2vt20g5qhwyh3wmdq7naq4fvs8g50m9',
     WEGLD: 'WEGLD-bd4d79',
   },
 };
