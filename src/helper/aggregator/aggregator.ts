@@ -10,8 +10,8 @@ const DEFAULT_CONFIG: Record<
 > = {
   D: {
     API: 'https://aggregator-devnet.ashswap.io',
-    CONTRACT: 'erd1qqqqqqqqqqqqqpgq3v7zza934936euxk3zg85et4jamqalzmh2usgdgrn2',
-    WEGLD: 'WEGLD-d7c6bb',
+    CONTRACT: 'erd1qqqqqqqqqqqqqpgqzshqdqcdzdl43vhy7p7q8uhc5xzu5x7zh2usyz5kg6',
+    WEGLD: 'WEGLD-a28c59',
   },
   '1': {
     API: 'https://aggregator.ashswap.io',
