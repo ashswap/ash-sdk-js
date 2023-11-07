@@ -9,7 +9,7 @@ const DEFAULT_CONFIG: Record<
   { API: string; CONTRACT: string; WEGLD: string }
 > = {
   D: {
-    API: 'https://aggregator-devnet.ashswap.io',
+    API: 'https://aggregator-devnet2.ashswap.io',
     CONTRACT: 'erd1qqqqqqqqqqqqqpgqzshqdqcdzdl43vhy7p7q8uhc5xzu5x7zh2usyz5kg6',
     WEGLD: 'WEGLD-a28c59',
   },
