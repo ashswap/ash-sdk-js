@@ -85,7 +85,7 @@ export class Aggregator {
         const amt = new BigNumber(amount);
         const res: SorSwapResponse = {
           effectivePrice: 1,
-          effectivePriceReversed: 1,
+          effectivePriceReserved: 1,
           marketSp: '0',
           priceImpact: 0,
           returnAmount: amt.div(1e18).toString(10),
