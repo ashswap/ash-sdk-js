@@ -47,6 +47,7 @@ export type SorSwapResponse = {
   marketSp: string;
   routes?: SorRoute[];
   swaps: SorSwap[];
+  minReturnAmount: string;
 };
 
 export type AggregatorConfig = {

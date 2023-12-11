@@ -19,7 +19,7 @@ const DEFAULT_CONFIG: Record<
     WEGLD: 'WEGLD-bd4d79',
   },
 };
-const MAX_FEE_PERCENT = 100_000;
+const MAX_PERCENT = 100_000;
 
 export class Aggregator {
   api: string;
@@ -73,12 +73,14 @@ export class Aggregator {
    * @param from token id | EGLD
    * @param to token id | EGLD
    * @param amount amount of token "from" with decimals ex: 1 EGLD = 1e18
+   * @param slippage default = 1_000 = 1%
    * @returns paths, rate, price impact..., return undefined if cannot find any paths
    */
   async getPaths(
     from: string,
     to: string,
-    amount: BigNumber.Value
+    amount: BigNumber.Value,
+    slippage = 1000
   ): Promise<SorSwapResponse | undefined> {
     if (this.getTokenId(from) === this.getTokenId(to)) {
       if (this.getTokenId(from) === this.defaultConfig.WEGLD) {
@@ -99,6 +101,7 @@ export class Aggregator {
           tokenIn: from,
           tokenOut: to,
           routes: [],
+          minReturnAmount: amt.div(1e18).toString(10),
         };
         return res;
       }
@@ -111,8 +114,8 @@ export class Aggregator {
         : 0);
     this.fee = fee;
     const amt = new BigNumber(amount)
-      .multipliedBy(MAX_FEE_PERCENT - fee)
-      .idiv(MAX_FEE_PERCENT)
+      .multipliedBy(MAX_PERCENT - fee)
+      .idiv(MAX_PERCENT)
       .toString(10);
     const data = await axios.get<SorSwapResponse>(`${this.api}/aggregate`, {
       params: {
@@ -123,6 +126,7 @@ export class Aggregator {
     });
     return {
       ...data.data,
+      minReturnAmount: new BigNumber(data.data.returnAmount).multipliedBy(MAX_PERCENT - slippage).div(MAX_PERCENT).toString(10),
       __from: from,
       __to: to,
       __amount: new BigNumber(amount).toString(10),
@@ -143,7 +147,7 @@ export class Aggregator {
     amount: BigNumber.Value,
     slippage: number
   ): Promise<Interaction> {
-    const res = await this.getPaths(from, to, amount);
+    const res = await this.getPaths(from, to, amount, slippage);
     if (!res) throw new Error(`Could not find any paths for ${from} to ${to}`);
     return await this.aggregateFromPaths(res, slippage);
   }
@@ -205,8 +209,8 @@ export class Aggregator {
       {
         token: this.getTokenId(to),
         amount: new BigNumber(sorswap.returnAmountWithDecimal)
-          .multipliedBy(MAX_FEE_PERCENT - slippage)
-          .idiv(MAX_FEE_PERCENT),
+          .multipliedBy(MAX_PERCENT - slippage)
+          .idiv(MAX_PERCENT),
       },
     ];
     if (this.isEgld(from)) {
