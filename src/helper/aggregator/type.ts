@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { ChainId } from '../token';
+import { Interaction } from '@multiversx/sdk-core/out';
 
 export type SorSwap = {
   poolId: string;
@@ -49,6 +50,13 @@ export type SorSwapResponse = {
   swaps: SorSwap[];
   minReturnAmount: string;
 };
+
+export type AgResponse = {
+  /** paths, rate, price impact... */
+  sorResponse: SorSwapResponse;
+  /** interaction for swap that is ready to sign and send to the network */
+  interaction: Interaction;
+}
 
 export type AggregatorConfig = {
   /** override the default aggregator API*/

@@ -6,7 +6,7 @@ import { Aggregator, ChainId } from "../src/helper";
 const swap = async () => {
     const xPortalProtocol = 'erd...';
     const agService = new Aggregator({chainId: ChainId.Mainnet, protocol: xPortalProtocol});
-    const interaction = await agService.aggregate('EGLD', 'ASH-a642d1', 1e18, 100);
+    const {sorResponse, interaction} = await agService.aggregate('EGLD', 'ASH-a642d1', 1e18, 100);
     // remember to set the sender (caller) before sending the tx
     const tx = interaction.withSender(new Address('erd...')).check().buildTransaction();
     // sign and send tx to the network
@@ -15,13 +15,15 @@ const swap = async () => {
     // })
 }
 // can get the paths to display and re-use the same results to create aggregated transactions
+// below is the example to swap 1 EGLD to ASH with slippage 1% 
 const swapWithPaths = async () => {
     const xPortalProtocol = 'erd...';
     const agService = new Aggregator({chainId: ChainId.Mainnet, protocol: xPortalProtocol});
-    const sorswap = await agService.getPaths('EGLD', 'ASH-a642d1', 1e18);
+    const sorswap = await agService.getPaths('EGLD', 'ASH-a642d1', 1e18, 1000);
     // use the response to display on the UI
     if (!sorswap) throw new Error(`Could not find any paths for EGLD to ASH`);
-    const interaction = await agService.aggregateFromPaths(sorswap, 100);
+    // should set the slippage as the same as the slippage in getPaths
+    const interaction = await agService.aggregateFromPaths(sorswap, 1000);
     // remember to set the sender (caller) before sending the tx
     const tx = interaction.withSender(new Address('erd...')).check().buildTransaction();
     // sign and send tx to the network

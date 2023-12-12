@@ -3,7 +3,7 @@ import axios from 'axios';
 import BigNumber from 'bignumber.js';
 import AggregatorContract from '../contracts/aggregator';
 import { ChainId } from '../token';
-import { AggregatorConfig, AggregatorStep, SorSwapResponse } from './type';
+import { AgResponse, AggregatorConfig, AggregatorStep, SorSwapResponse } from './type';
 const DEFAULT_CONFIG: Record<
   string,
   { API: string; CONTRACT: string; WEGLD: string }
@@ -139,17 +139,20 @@ export class Aggregator {
    * @param to token id | EGLD
    * @param amount amount of token "from" with decimals ex: 1 EGLD = 1e18
    * @param slippage 1% = 1_000
-   * @returns interaction that is ready to sign and send to the network
+   * @returns agResponse
    */
   async aggregate(
     from: string,
     to: string,
     amount: BigNumber.Value,
     slippage: number
-  ): Promise<Interaction> {
+  ): Promise<AgResponse> {
     const res = await this.getPaths(from, to, amount, slippage);
     if (!res) throw new Error(`Could not find any paths for ${from} to ${to}`);
-    return await this.aggregateFromPaths(res, slippage);
+    return {
+      sorResponse: res,
+      interaction: await this.aggregateFromPaths(res, slippage)
+    };
   }
 
   /**
