@@ -3,7 +3,13 @@ import axios from 'axios';
 import BigNumber from 'bignumber.js';
 import AggregatorContract from '../contracts/aggregator';
 import { ChainId } from '../token';
-import { AgResponse, AggregatorConfig, AggregatorStep, SorSwapResponse } from './type';
+import {
+  AgResponse,
+  AggregatorConfig,
+  AggregatorStep,
+  SorSwapResponse,
+  SorSwapResponseFromServer,
+} from './type';
 const DEFAULT_CONFIG: Record<
   string,
   { API: string; CONTRACT: string; WEGLD: string }
@@ -102,6 +108,7 @@ export class Aggregator {
           tokenOut: to,
           routes: [],
           minReturnAmount: amt.div(1e18).toString(10),
+          minReturnAmountWithDecimal: amt.toString(10),
         };
         return res;
       }
@@ -117,16 +124,28 @@ export class Aggregator {
       .multipliedBy(MAX_PERCENT - fee)
       .idiv(MAX_PERCENT)
       .toString(10);
-    const data = await axios.get<SorSwapResponse>(`${this.api}/aggregate`, {
-      params: {
-        from: this.getTokenId(from),
-        to: this.getTokenId(to),
-        amount: amt,
-      },
-    });
+    const data = await axios.get<SorSwapResponseFromServer>(
+      `${this.api}/aggregate`,
+      {
+        params: {
+          from: this.getTokenId(from),
+          to: this.getTokenId(to),
+          amount: amt,
+        },
+      }
+    );
+    const scale = new BigNumber(data.data.returnAmountWithDecimal).div(
+      data.data.returnAmount
+    );
+    const minReturnAmountWithDecimal = new BigNumber(
+      data.data.returnAmountWithDecimal
+    )
+      .multipliedBy(MAX_PERCENT - slippage)
+      .idiv(MAX_PERCENT);
     return {
       ...data.data,
-      minReturnAmount: new BigNumber(data.data.returnAmount).multipliedBy(MAX_PERCENT - slippage).div(MAX_PERCENT).toString(10),
+      minReturnAmount: minReturnAmountWithDecimal.div(scale).toString(10),
+      minReturnAmountWithDecimal: minReturnAmountWithDecimal.toString(10),
       __from: from,
       __to: to,
       __amount: new BigNumber(amount).toString(10),
@@ -151,7 +170,7 @@ export class Aggregator {
     if (!res) throw new Error(`Could not find any paths for ${from} to ${to}`);
     return {
       sorResponse: res,
-      interaction: await this.aggregateFromPaths(res, slippage)
+      interaction: await this.aggregateFromPaths(res, slippage),
     };
   }
 

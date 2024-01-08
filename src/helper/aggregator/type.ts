@@ -32,7 +32,8 @@ export type SorRoute = {
   tokenOut: string;
   tokenOutAmount: string;
 };
-export type SorSwapResponse = {
+
+export type SorSwapResponseFromServer = {
   effectivePrice: number | null;
   effectivePriceReserved: number | null;
   priceImpact: number | null;
@@ -48,7 +49,11 @@ export type SorSwapResponse = {
   marketSp: string;
   routes?: SorRoute[];
   swaps: SorSwap[];
+};
+
+export type SorSwapResponse = SorSwapResponseFromServer & {
   minReturnAmount: string;
+  minReturnAmountWithDecimal: string;
 };
 
 export type AgResponse = {
@@ -56,7 +61,7 @@ export type AgResponse = {
   sorResponse: SorSwapResponse;
   /** interaction for swap that is ready to sign and send to the network */
   interaction: Interaction;
-}
+};
 
 export type AggregatorConfig = {
   /** override the default aggregator API*/
