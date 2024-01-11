@@ -96,9 +96,15 @@ Provide an abstraction service to get routes to swap between two assets,
     // Based on the fee configuration, xPortal will also receive a small amount of fees.
     const xPortalProtocol = 'erd...';
     const agService = new Aggregator({chainId: ChainId.Mainnet, protocol: xPortalProtocol});
-    const { interaction } = await agService.aggregate('EGLD', 'ASH-a642d1', 1e18, 100);
+    const {sorResponse, getInteraction} = await agService.aggregate('EGLD', 'ASH-a642d1', 1e18, 100);
     // remember to set the sender (caller) before sending the tx
-    const tx = interaction.withSender(new Address('erd...')).check().buildTransaction();
+    const tx = await getInteraction(async (warning) => {
+        console.log('tx warning:', warning);
+        const swapAnyway = await openModal().then(() => true).catch(() => false);
+        return swapAnyway;
+    }).catch(() => null);
+    if (!tx) return;
+    tx.withSender(new Address('erd...')).check().buildTransaction();
     // sign and send tx to the network
     sendTransactions({
         transactions: [tx],

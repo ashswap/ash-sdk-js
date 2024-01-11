@@ -109,6 +109,7 @@ export class Aggregator {
           routes: [],
           minReturnAmount: amt.div(1e18).toString(10),
           minReturnAmountWithDecimal: amt.toString(10),
+          warning: 'None'
         };
         return res;
       }
@@ -170,7 +171,9 @@ export class Aggregator {
     if (!res) throw new Error(`Could not find any paths for ${from} to ${to}`);
     return {
       sorResponse: res,
-      interaction: await this.aggregateFromPaths(res, slippage),
+      getInteraction: async (resolveWarning) => {        
+        return await this.aggregateFromPaths(res, slippage, resolveWarning);
+      } 
     };
   }
 
@@ -178,12 +181,19 @@ export class Aggregator {
    *
    * @param sorswap can get from getPaths methods
    * @param slippage 1% = 1_000
+   * @param resolveWarning resolve and return true if the user confirm to swap anyway and vice versa
    * @returns interaction that is ready to sign and send to the network
    */
   async aggregateFromPaths(
     sorswap: SorSwapResponse,
-    slippage: number
+    slippage: number,
+    resolveWarning: (warning: string) => Promise<boolean>,
   ): Promise<Interaction> {
+    if(sorswap.warning && sorswap.warning !== 'None') {
+      const resolved = await resolveWarning(sorswap.warning);
+      if (!resolved) throw new Error(`Cannot resolve ${sorswap.warning} or users reject the transaction.`);
+    }
+
     const {
       __from: from,
       __to: to,
