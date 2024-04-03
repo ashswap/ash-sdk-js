@@ -109,7 +109,7 @@ export class Aggregator {
           routes: [],
           minReturnAmount: amt.div(1e18).toString(10),
           minReturnAmountWithDecimal: amt.toString(10),
-          warning: 'None'
+          warning: 'None',
         };
         return res;
       }
@@ -171,9 +171,9 @@ export class Aggregator {
     if (!res) throw new Error(`Could not find any paths for ${from} to ${to}`);
     return {
       sorResponse: res,
-      getInteraction: async (resolveWarning) => {        
+      getInteraction: async (resolveWarning) => {
         return await this.aggregateFromPaths(res, slippage, resolveWarning);
-      } 
+      },
     };
   }
 
@@ -187,11 +187,14 @@ export class Aggregator {
   async aggregateFromPaths(
     sorswap: SorSwapResponse,
     slippage: number,
-    resolveWarning: (warning: string) => Promise<boolean>,
+    resolveWarning: (warning: string) => Promise<boolean> | boolean
   ): Promise<Interaction> {
-    if(sorswap.warning && sorswap.warning !== 'None') {
+    if (sorswap.warning && sorswap.warning !== 'None') {
       const resolved = await resolveWarning(sorswap.warning);
-      if (!resolved) throw new Error(`Cannot resolve ${sorswap.warning} or users reject the transaction.`);
+      if (!resolved)
+        throw new Error(
+          `Cannot resolve ${sorswap.warning} or users reject the transaction.`
+        );
     }
 
     const {

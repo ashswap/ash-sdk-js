@@ -1,6 +1,6 @@
 {
   "name": "@ashswap/ash-sdk-js",
-  "version": "2.0.9",
+  "version": "2.0.10",
   "description": "AshSwap SDK for JavaScript and TypeScript",
   "main": "out/index.js",
   "types": "out/index.d.js",
@@ -15,8 +15,8 @@
   "author": "AshSwap",
   "license": "MIT",
   "dependencies": {
-    "@multiversx/sdk-core": "12.18.0",
-    "@multiversx/sdk-network-providers": "2.2.1",
+    "@multiversx/sdk-core": "12.19.2",
+    "@multiversx/sdk-network-providers": "2.4.3",
     "lodash.chunk": "^4.2.0"
   },
   "devDependencies": {

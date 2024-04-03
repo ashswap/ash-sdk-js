@@ -61,7 +61,9 @@ export type AgResponse = {
   /** paths, rate, price impact... */
   sorResponse: SorSwapResponse;
   /** interaction for swap that is ready to sign and send to the network */
-  getInteraction: (resolveWarning: (warning: string) => Promise<boolean> ) => Promise<Interaction>;
+  getInteraction: (
+    resolveWarning: (warning: string) => Promise<boolean> | boolean
+  ) => Promise<Interaction>;
 };
 
 export type AggregatorConfig = {
