@@ -10,19 +10,24 @@ import {
   SorSwapResponse,
   SorSwapResponseFromServer,
 } from './type';
+import WrappedEGLDContract from '../contracts/wrappedEGLD';
 const DEFAULT_CONFIG: Record<
   string,
-  { API: string; CONTRACT: string; WEGLD: string }
+  { API: string; CONTRACT: string; WEGLD: string; WEGLD_CONTRACT: string }
 > = {
   D: {
     API: 'https://aggregator-devnet2.ashswap.io',
     CONTRACT: 'erd1qqqqqqqqqqqqqpgqzshqdqcdzdl43vhy7p7q8uhc5xzu5x7zh2usyz5kg6',
     WEGLD: 'WEGLD-a28c59',
+    WEGLD_CONTRACT:
+      'erd1qqqqqqqqqqqqqpgqpv09kfzry5y4sj05udcngesat07umyj70n4sa2c0rp',
   },
   '1': {
     API: 'https://aggregator.ashswap.io',
     CONTRACT: 'erd1qqqqqqqqqqqqqpgqcc69ts8409p3h77q5chsaqz57y6hugvc4fvs64k74v',
     WEGLD: 'WEGLD-bd4d79',
+    WEGLD_CONTRACT:
+      'erd1qqqqqqqqqqqqqpgqhe8t5jewej70zupmh44jurgn29psua5l2jps3ntjj3',
   },
 };
 const MAX_PERCENT = 100_000;
@@ -110,7 +115,10 @@ export class Aggregator {
           minReturnAmount: amt.div(1e18).toString(10),
           minReturnAmountWithDecimal: amt.toString(10),
           warning: 'None',
-        };
+          __from: from,
+          __to: to,
+          __amount: new BigNumber(amount).toString(10),
+        } as SorSwapResponse;
         return res;
       }
       return;
@@ -207,21 +215,33 @@ export class Aggregator {
       __amount: string;
     }) || {};
 
+    if (!sorswap || !from || !to || !amount)
+      throw new Error('Invalid swap response');
+
+    if (this.getTokenId(from) === this.getTokenId(to)) {
+      const wegldContract = new WrappedEGLDContract(
+        this.defaultConfig.WEGLD_CONTRACT,
+        this.chainId
+      );
+      const isWrap = this.isEgld(from) && to === this.defaultConfig.WEGLD;
+      const isUnwrap = this.isEgld(to) && from === this.defaultConfig.WEGLD;
+      if (isWrap) {
+        return await wegldContract.wrapEgld(new BigNumber(amount));
+      }
+      if (isUnwrap) {
+        return await wegldContract.unwrapEgld(
+          TokenTransfer.fungibleFromBigInteger(this.defaultConfig.WEGLD, amount)
+        );
+      }
+      throw new Error('Invalid swap response');
+    }
+
     if (
-      !sorswap ||
-      !from ||
-      !to ||
-      !amount ||
       this.getTokenId(from) !== sorswap.tokenIn ||
       this.getTokenId(to) !== sorswap.tokenOut
     )
       throw new Error('Invalid swap response');
-
-    const protocol =
-      this.getTokenId(from) === this.getTokenId(to) &&
-      this.getTokenId(from) === this.defaultConfig.WEGLD
-        ? ''
-        : this.protocol;
+    const protocol = this.protocol;
 
     const swaps = sorswap?.swaps || [];
     const hopTokenIds = sorswap?.tokenAddresses || [];
