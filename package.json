@@ -10,7 +10,10 @@
   "scripts": {
     "test": "jest",
     "compile": "tsc -p tsconfig.json",
-    "prepare": "npm run compile"
+    "prepare": "npm run compile",
+    "publish:patch": "npm version patch --no-git-tag-version && npm publish --access public",
+    "publish:minor": "npm version minor --no-git-tag-version && npm publish --access public",
+    "publish:major": "npm version major --no-git-tag-version && npm publish --access public"
   },
   "author": "AshSwap",
   "license": "MIT",
